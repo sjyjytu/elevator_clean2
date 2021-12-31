@@ -85,8 +85,9 @@ class MansionManager(object):
                 SmecElevator(start_position=0.0, mansion_config=self._config, name="%s_E%d" % (self._name, i + 1), _mansion=self, elev_index=i))
 
         self._config.reset()
-        self._person_generator.link_mansion(self._config)
-        self._person_generator.reset()
+        if self._person_generator:
+            self._person_generator.link_mansion(self._config)
+            self._person_generator.reset()
 
         self.lock = [False for i in range(self._elevator_number)]
         self.lock_open_time = [0 for i in range(self._elevator_number)]
@@ -228,29 +229,30 @@ class MansionManager(object):
             unallocated_masks[dn + self._floor_number] = 1
         return unallocated_masks
 
-    def generate_person(self, byhand=False):
+    def generate_person(self, byhand=False, person_list=None):
         # modified by JY: move the generate person part from run_mansion to the env, so generate person after run mansion.
-        if not byhand:
-            person_list = self._person_generator.generate_person()
-        else:
-            # 3 9
-            person_list = []
-            a = input('产生人：')
-            if a != '':
-                info = a.split(' ')
-                s = info[0]
-                e = info[1]
-                pnum = 1 if len(info) < 3 else int(info[2])
-                for pi in range(pnum):
-                    person = PersonType(
-                        pi,
-                        75,
-                        int(s),
-                        int(e),
-                        self._config.raw_time,
-                        0
-                    )
-                    person_list.append(person)
+        if not person_list:
+            if not byhand:
+                person_list = self._person_generator.generate_person()
+            else:
+                # 3 9
+                person_list = []
+                a = input('产生人：')
+                if a != '':
+                    info = a.split(' ')
+                    s = info[0]
+                    e = info[1]
+                    pnum = 1 if len(info) < 3 else int(info[2])
+                    for pi in range(pnum):
+                        person = PersonType(
+                            pi,
+                            75,
+                            int(s),
+                            int(e),
+                            self._config.raw_time,
+                            0
+                        )
+                        person_list.append(person)
         for person in person_list:
             if person.SourceFloor < person.TargetFloor:
                 self._wait_upward_persons_queue[person.SourceFloor - 1].appendleft(person)

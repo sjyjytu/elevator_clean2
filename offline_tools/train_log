@@ -1,0 +1,721 @@
+C:\Users\13323\anaconda3\envs\rljy\python.exe F:/elevator/smec_main.py --eval_interval 30
+args.lift_num :  6
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+Got all passenger information from disk!
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 76.3.
+[Evaluation] wait rew: 3470.0; io rew: -1339.0; enter rew: 663.2.
+[train] Curr val waiting time: 76.3
+[train] Updates 10, num timesteps 440, FPS 7; training waiting time: 17.0.
+[train] Max reward 7.071, min reward: 2.131, Mean reward: 4.009.
+[train] Best val waiting time: 76.3, Value loss: 0.430, action loss: -0.00, dist entropy: 2.149.
+[train] Updates 20, num timesteps 840, FPS 10; training waiting time: 29.2.
+[train] Max reward 0.815, min reward: 0.365, Mean reward: 0.514.
+[train] Best val waiting time: 76.3, Value loss: 0.057, action loss: 0.01, dist entropy: 2.096.
+[train] Updates 30, num timesteps 1240, FPS 12; training waiting time: 50.6.
+[train] Max reward 0.189, min reward: 0.166, Mean reward: 0.174.
+[train] Best val waiting time: 76.3, Value loss: 0.042, action loss: -0.00, dist entropy: 1.814.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 816 people: mean waiting time 88.3.
+[Evaluation] wait rew: 3359.8; io rew: -1657.0; enter rew: 659.2.
+[train] Curr val waiting time: 88.3
+[train] Updates 40, num timesteps 1640, FPS 10; training waiting time: 70.0.
+[train] Max reward 0.161, min reward: 0.119, Mean reward: 0.135.
+[train] Best val waiting time: 76.3, Value loss: 0.066, action loss: -0.00, dist entropy: 1.968.
+[train] Updates 50, num timesteps 2040, FPS 11; training waiting time: 90.2.
+[train] Max reward 0.323, min reward: 0.094, Mean reward: 0.181.
+[train] Best val waiting time: 76.3, Value loss: 0.031, action loss: -0.00, dist entropy: 1.919.
+[train] Updates 60, num timesteps 2440, FPS 12; training waiting time: 112.6.
+[train] Max reward 0.101, min reward: 0.093, Mean reward: 0.098.
+[train] Best val waiting time: 76.3, Value loss: 5.315, action loss: 0.02, dist entropy: 1.965.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 817 people: mean waiting time 76.2.
+[Evaluation] wait rew: 3462.2; io rew: -1391.0; enter rew: 660.8.
+[train] Curr val waiting time: 76.2
+[train] Updates 70, num timesteps 2840, FPS 11; training waiting time: 135.7.
+[train] Max reward 0.086, min reward: 0.079, Mean reward: 0.084.
+[train] Best val waiting time: 76.2, Value loss: 5.482, action loss: 0.02, dist entropy: 1.953.
+[train] Updates 80, num timesteps 3240, FPS 11; training waiting time: 156.5.
+[train] Max reward 0.161, min reward: 0.075, Mean reward: 0.107.
+[train] Best val waiting time: 76.2, Value loss: 274.149, action loss: 0.03, dist entropy: 1.893.
+[train] Updates 90, num timesteps 3640, FPS 12; training waiting time: 178.0.
+[train] Max reward 0.082, min reward: 0.077, Mean reward: 0.080.
+[train] Best val waiting time: 76.2, Value loss: 217.542, action loss: 0.02, dist entropy: 2.026.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 70.6.
+[Evaluation] wait rew: 3517.1; io rew: -1344.0; enter rew: 659.2.
+[train] Curr val waiting time: 70.6
+[train] Updates 100, num timesteps 4040, FPS 11; training waiting time: 188.5.
+[train] Max reward 0.074, min reward: 0.069, Mean reward: 0.071.
+[train] Best val waiting time: 70.6, Value loss: 217.508, action loss: 0.04, dist entropy: 1.928.
+[train] Updates 110, num timesteps 4440, FPS 11; training waiting time: 214.9.
+[train] Max reward 0.097, min reward: 0.056, Mean reward: 0.071.
+[train] Best val waiting time: 70.6, Value loss: 56.527, action loss: 0.04, dist entropy: 1.977.
+[train] Updates 120, num timesteps 4840, FPS 12; training waiting time: 241.6.
+[train] Max reward 0.098, min reward: 0.065, Mean reward: 0.077.
+[train] Best val waiting time: 70.6, Value loss: 1212.519, action loss: 0.01, dist entropy: 2.022.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 821 people: mean waiting time 86.9.
+[Evaluation] wait rew: 3391.5; io rew: -1545.0; enter rew: 661.2.
+[train] Curr val waiting time: 86.9
+[train] Updates 130, num timesteps 5240, FPS 11; training waiting time: 265.1.
+[train] Max reward 0.130, min reward: 0.057, Mean reward: 0.085.
+[train] Best val waiting time: 70.6, Value loss: 4213.391, action loss: 0.03, dist entropy: 1.866.
+[train] Updates 140, num timesteps 5640, FPS 11; training waiting time: 287.5.
+[train] Max reward 0.114, min reward: 0.048, Mean reward: 0.076.
+[train] Best val waiting time: 70.6, Value loss: 19714.137, action loss: 0.04, dist entropy: 1.834.
+[train] Updates 150, num timesteps 6040, FPS 12; training waiting time: 299.3.
+[train] Max reward 0.053, min reward: 0.039, Mean reward: 0.048.
+[train] Best val waiting time: 70.6, Value loss: 37588.364, action loss: 0.05, dist entropy: 1.752.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 815 people: mean waiting time 77.5.
+[Evaluation] wait rew: 3443.1; io rew: -1547.0; enter rew: 661.6.
+[train] Curr val waiting time: 77.5
+[train] Updates 160, num timesteps 6440, FPS 11; training waiting time: 316.2.
+[train] Max reward 0.051, min reward: 0.038, Mean reward: 0.045.
+[train] Best val waiting time: 70.6, Value loss: 58819.856, action loss: 0.01, dist entropy: 1.861.
+[train] Updates 170, num timesteps 6840, FPS 11; training waiting time: 334.3.
+[train] Max reward 0.062, min reward: 0.041, Mean reward: 0.049.
+[train] Best val waiting time: 70.6, Value loss: 199972.858, action loss: 0.02, dist entropy: 1.902.
+[train] Updates 180, num timesteps 7240, FPS 12; training waiting time: 361.6.
+[train] Max reward 0.116, min reward: 0.030, Mean reward: 0.060.
+[train] Best val waiting time: 70.6, Value loss: 27287.271, action loss: 0.06, dist entropy: 1.899.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 80.1.
+[Evaluation] wait rew: 3443.0; io rew: -1584.0; enter rew: 660.8.
+[train] Curr val waiting time: 80.1
+[train] Updates 190, num timesteps 7640, FPS 11; training waiting time: 387.7.
+[train] Max reward 0.103, min reward: 0.067, Mean reward: 0.079.
+[train] Best val waiting time: 70.6, Value loss: 61224.253, action loss: 0.11, dist entropy: 1.707.
+[train] Updates 200, num timesteps 8040, FPS 12; training waiting time: 394.3.
+[train] Max reward 0.070, min reward: 0.022, Mean reward: 0.042.
+[train] Best val waiting time: 70.6, Value loss: 273169.622, action loss: 0.05, dist entropy: 1.635.
+[train] Updates 210, num timesteps 8440, FPS 12; training waiting time: 426.2.
+[train] Max reward 0.026, min reward: 0.015, Mean reward: 0.021.
+[train] Best val waiting time: 70.6, Value loss: 423254.916, action loss: 0.05, dist entropy: 1.804.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 815 people: mean waiting time 87.7.
+[Evaluation] wait rew: 3360.6; io rew: -1560.0; enter rew: 665.2.
+[train] Curr val waiting time: 87.7
+[train] Updates 220, num timesteps 8840, FPS 11; training waiting time: 443.0.
+[train] Max reward 0.042, min reward: 0.020, Mean reward: 0.031.
+[train] Best val waiting time: 70.6, Value loss: 793517.186, action loss: 0.06, dist entropy: 1.682.
+[train] Updates 230, num timesteps 9240, FPS 12; training waiting time: 461.0.
+[train] Max reward 0.071, min reward: -0.007, Mean reward: 0.032.
+[train] Best val waiting time: 70.6, Value loss: 372608.966, action loss: 0.07, dist entropy: 1.636.
+[train] Updates 240, num timesteps 9640, FPS 12; training waiting time: 469.9.
+[train] Max reward 0.002, min reward: -0.019, Mean reward: -0.010.
+[train] Best val waiting time: 70.6, Value loss: 1027083.257, action loss: 0.07, dist entropy: 1.609.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 821 people: mean waiting time 83.7.
+[Evaluation] wait rew: 3418.1; io rew: -1634.0; enter rew: 661.6.
+[train] Curr val waiting time: 83.7
+[train] Updates 250, num timesteps 10040, FPS 11; training waiting time: 494.6.
+[train] Max reward 0.009, min reward: -0.025, Mean reward: -0.007.
+[train] Best val waiting time: 70.6, Value loss: 1692884.775, action loss: 0.05, dist entropy: 1.642.
+[train] Updates 260, num timesteps 10440, FPS 12; training waiting time: 531.5.
+[train] Max reward 0.048, min reward: 0.005, Mean reward: 0.025.
+[train] Best val waiting time: 70.6, Value loss: 2113562.784, action loss: 0.04, dist entropy: 1.859.
+[train] Updates 270, num timesteps 10840, FPS 12; training waiting time: 544.1.
+[train] Max reward -0.007, min reward: -0.028, Mean reward: -0.019.
+[train] Best val waiting time: 70.6, Value loss: 2571590.815, action loss: 0.03, dist entropy: 1.639.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 813 people: mean waiting time 85.3.
+[Evaluation] wait rew: 3371.5; io rew: -1492.0; enter rew: 662.4.
+[train] Curr val waiting time: 85.3
+[train] Updates 280, num timesteps 11240, FPS 11; training waiting time: 542.2.
+[train] Max reward 0.001, min reward: -0.035, Mean reward: -0.016.
+[train] Best val waiting time: 70.6, Value loss: 2646674.849, action loss: 0.01, dist entropy: 1.783.
+[train] Updates 290, num timesteps 11640, FPS 12; training waiting time: 585.6.
+[train] Max reward -0.037, min reward: -0.052, Mean reward: -0.042.
+[train] Best val waiting time: 70.6, Value loss: 3981798.437, action loss: 0.01, dist entropy: 0.968.
+[train] Updates 300, num timesteps 12040, FPS 12; training waiting time: 599.4.
+[train] Max reward -0.025, min reward: -0.051, Mean reward: -0.034.
+[train] Best val waiting time: 70.6, Value loss: 2505003.024, action loss: 0.01, dist entropy: 0.988.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 808 people: mean waiting time 93.0.
+[Evaluation] wait rew: 3288.6; io rew: -1670.0; enter rew: 652.8.
+[train] Curr val waiting time: 93.0
+[train] Updates 310, num timesteps 12440, FPS 11; training waiting time: 639.5.
+[train] Max reward 0.013, min reward: -0.043, Mean reward: -0.022.
+[train] Best val waiting time: 70.6, Value loss: 1843532.537, action loss: 0.06, dist entropy: 0.980.
+[train] Updates 320, num timesteps 12840, FPS 12; training waiting time: 639.6.
+[train] Max reward -0.005, min reward: -0.046, Mean reward: -0.032.
+[train] Best val waiting time: 70.6, Value loss: 5136230.172, action loss: 0.03, dist entropy: 0.608.
+[train] Updates 330, num timesteps 13240, FPS 12; training waiting time: 642.2.
+[train] Max reward -0.009, min reward: -0.055, Mean reward: -0.030.
+[train] Best val waiting time: 70.6, Value loss: 6850230.144, action loss: 0.03, dist entropy: 0.610.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 814 people: mean waiting time 87.8.
+[Evaluation] wait rew: 3355.3; io rew: -1647.0; enter rew: 659.2.
+[train] Curr val waiting time: 87.8
+[train] Updates 340, num timesteps 13640, FPS 11; training waiting time: 678.0.
+[train] Max reward -0.020, min reward: -0.047, Mean reward: -0.033.
+[train] Best val waiting time: 70.6, Value loss: 5597462.686, action loss: 0.05, dist entropy: 0.547.
+[train] Updates 350, num timesteps 14040, FPS 12; training waiting time: 689.8.
+[train] Max reward 0.005, min reward: -0.066, Mean reward: -0.036.
+[train] Best val waiting time: 70.6, Value loss: 8312706.050, action loss: -0.00, dist entropy: 0.554.
+[train] Updates 360, num timesteps 14440, FPS 12; training waiting time: 714.1.
+[train] Max reward -0.028, min reward: -0.045, Mean reward: -0.036.
+[train] Best val waiting time: 70.6, Value loss: 6552621.263, action loss: 0.03, dist entropy: 0.551.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 804 people: mean waiting time 97.2.
+[Evaluation] wait rew: 3238.1; io rew: -1695.0; enter rew: 660.0.
+[train] Curr val waiting time: 97.2
+[train] Updates 370, num timesteps 14840, FPS 11; training waiting time: 764.9.
+[train] Max reward -0.030, min reward: -0.137, Mean reward: -0.078.
+[train] Best val waiting time: 70.6, Value loss: 9142686.139, action loss: 0.01, dist entropy: 0.055.
+[train] Updates 380, num timesteps 15240, FPS 12; training waiting time: 768.5.
+[train] Max reward -0.025, min reward: -0.091, Mean reward: -0.054.
+[train] Best val waiting time: 70.6, Value loss: 6718927.760, action loss: 0.00, dist entropy: 0.050.
+[train] Updates 390, num timesteps 15640, FPS 12; training waiting time: 800.7.
+[train] Max reward -0.058, min reward: -0.075, Mean reward: -0.064.
+[train] Best val waiting time: 70.6, Value loss: 12598299.060, action loss: 0.00, dist entropy: 0.024.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 812 people: mean waiting time 86.0.
+[Evaluation] wait rew: 3361.5; io rew: -1723.0; enter rew: 661.6.
+[train] Curr val waiting time: 86.0
+[train] Updates 400, num timesteps 16040, FPS 11; training waiting time: 831.5.
+[train] Max reward -0.056, min reward: -0.151, Mean reward: -0.091.
+[train] Best val waiting time: 70.6, Value loss: 12135793.312, action loss: 0.01, dist entropy: 0.149.
+[train] Updates 410, num timesteps 16440, FPS 12; training waiting time: 851.5.
+[train] Max reward -0.050, min reward: -0.221, Mean reward: -0.113.
+[train] Best val waiting time: 70.6, Value loss: 19061349.435, action loss: 0.09, dist entropy: 0.552.
+[train] Updates 420, num timesteps 16840, FPS 12; training waiting time: 885.0.
+[train] Max reward -0.054, min reward: -0.069, Mean reward: -0.060.
+[train] Best val waiting time: 70.6, Value loss: 5807477.906, action loss: 0.01, dist entropy: 0.663.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 818 people: mean waiting time 80.4.
+[Evaluation] wait rew: 3432.5; io rew: -1560.0; enter rew: 663.2.
+[train] Curr val waiting time: 80.4
+[train] Updates 430, num timesteps 17240, FPS 11; training waiting time: 889.7.
+[train] Max reward -0.042, min reward: -0.062, Mean reward: -0.049.
+[train] Best val waiting time: 70.6, Value loss: 19731018.572, action loss: 0.02, dist entropy: 0.659.
+[train] Updates 440, num timesteps 17640, FPS 12; training waiting time: 864.6.
+[train] Max reward -0.041, min reward: -0.063, Mean reward: -0.052.
+[train] Best val waiting time: 70.6, Value loss: 17036984.790, action loss: 0.01, dist entropy: 0.633.
+[train] Updates 450, num timesteps 18040, FPS 12; training waiting time: 909.3.
+[train] Max reward -0.053, min reward: -0.063, Mean reward: -0.057.
+[train] Best val waiting time: 70.6, Value loss: 12856242.775, action loss: 0.03, dist entropy: 0.616.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 818 people: mean waiting time 80.4.
+[Evaluation] wait rew: 3432.5; io rew: -1560.0; enter rew: 663.2.
+[train] Curr val waiting time: 80.4
+[train] Updates 460, num timesteps 18440, FPS 11; training waiting time: 909.8.
+[train] Max reward -0.063, min reward: -0.066, Mean reward: -0.064.
+[train] Best val waiting time: 70.6, Value loss: 25224367.288, action loss: 0.02, dist entropy: 0.639.
+[train] Updates 470, num timesteps 18840, FPS 12; training waiting time: 963.8.
+[train] Max reward -0.083, min reward: -0.161, Mean reward: -0.109.
+[train] Best val waiting time: 70.6, Value loss: 43773565.884, action loss: 0.02, dist entropy: 0.644.
+[train] Updates 480, num timesteps 19240, FPS 12; training waiting time: 969.2.
+[train] Max reward -0.076, min reward: -0.140, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 42292675.159, action loss: 0.03, dist entropy: 1.627.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 822 people: mean waiting time 76.1.
+[Evaluation] wait rew: 3484.5; io rew: -1480.0; enter rew: 663.2.
+[train] Curr val waiting time: 76.1
+[train] Updates 490, num timesteps 19640, FPS 11; training waiting time: 999.5.
+[train] Max reward -0.042, min reward: -0.184, Mean reward: -0.097.
+[train] Best val waiting time: 70.6, Value loss: 47854832.497, action loss: 0.02, dist entropy: 0.094.
+[train] Updates 500, num timesteps 20040, FPS 12; training waiting time: 1006.6.
+[train] Max reward -0.040, min reward: -0.083, Mean reward: -0.067.
+[train] Best val waiting time: 70.6, Value loss: 34334293.492, action loss: 0.00, dist entropy: 0.012.
+[train] Updates 510, num timesteps 20440, FPS 12; training waiting time: 1002.9.
+[train] Max reward -0.060, min reward: -0.159, Mean reward: -0.093.
+[train] Best val waiting time: 70.6, Value loss: 34199812.175, action loss: -0.00, dist entropy: 0.004.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 87.5.
+[Evaluation] wait rew: 3382.9; io rew: -1760.0; enter rew: 657.6.
+[train] Curr val waiting time: 87.5
+[train] Updates 520, num timesteps 20840, FPS 11; training waiting time: 1030.6.
+[train] Max reward -0.064, min reward: -0.079, Mean reward: -0.073.
+[train] Best val waiting time: 70.6, Value loss: 24418491.192, action loss: -0.00, dist entropy: 0.003.
+[train] Updates 530, num timesteps 21240, FPS 12; training waiting time: 1077.4.
+[train] Max reward -0.052, min reward: -0.069, Mean reward: -0.062.
+[train] Best val waiting time: 70.6, Value loss: 24905868.608, action loss: 0.00, dist entropy: 0.003.
+[train] Updates 540, num timesteps 21640, FPS 12; training waiting time: 1156.8.
+[train] Max reward -0.058, min reward: -0.088, Mean reward: -0.077.
+[train] Best val waiting time: 70.6, Value loss: 40880836.609, action loss: 0.00, dist entropy: 0.004.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 92.7.
+[Evaluation] wait rew: 3335.8; io rew: -1643.0; enter rew: 661.6.
+[train] Curr val waiting time: 92.7
+[train] Updates 550, num timesteps 22040, FPS 11; training waiting time: 1160.3.
+[train] Max reward -0.040, min reward: -0.080, Mean reward: -0.063.
+[train] Best val waiting time: 70.6, Value loss: 42925098.431, action loss: -0.00, dist entropy: 0.002.
+[train] Updates 560, num timesteps 22440, FPS 12; training waiting time: 1180.6.
+[train] Max reward -0.058, min reward: -0.088, Mean reward: -0.077.
+[train] Best val waiting time: 70.6, Value loss: 47654436.633, action loss: 0.00, dist entropy: 0.005.
+[train] Updates 570, num timesteps 22840, FPS 12; training waiting time: 1142.3.
+[train] Max reward -0.076, min reward: -0.091, Mean reward: -0.083.
+[train] Best val waiting time: 70.6, Value loss: 91727394.291, action loss: 0.01, dist entropy: 0.003.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 92.7.
+[Evaluation] wait rew: 3335.8; io rew: -1643.0; enter rew: 661.6.
+[train] Curr val waiting time: 92.7
+[train] Updates 580, num timesteps 23240, FPS 11; training waiting time: 1196.4.
+[train] Max reward -0.054, min reward: -0.157, Mean reward: -0.100.
+[train] Best val waiting time: 70.6, Value loss: 103062225.502, action loss: 0.00, dist entropy: 0.003.
+[train] Updates 590, num timesteps 23640, FPS 11; training waiting time: 1192.5.
+[train] Max reward -0.019, min reward: -0.070, Mean reward: -0.053.
+[train] Best val waiting time: 70.6, Value loss: 73504646.858, action loss: 0.01, dist entropy: 0.012.
+[train] Updates 600, num timesteps 24040, FPS 12; training waiting time: 1192.0.
+[train] Max reward -0.062, min reward: -0.081, Mean reward: -0.072.
+[train] Best val waiting time: 70.6, Value loss: 71551073.275, action loss: 0.00, dist entropy: 0.009.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 92.7.
+[Evaluation] wait rew: 3335.8; io rew: -1643.0; enter rew: 661.6.
+[train] Curr val waiting time: 92.7
+[train] Updates 610, num timesteps 24440, FPS 11; training waiting time: 1244.1.
+[train] Max reward -0.075, min reward: -0.086, Mean reward: -0.080.
+[train] Best val waiting time: 70.6, Value loss: 27067494.960, action loss: 0.00, dist entropy: 0.004.
+[train] Updates 620, num timesteps 24840, FPS 11; training waiting time: 1255.8.
+[train] Max reward -0.061, min reward: -0.165, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 23589011.980, action loss: 0.00, dist entropy: 0.004.
+[train] Updates 630, num timesteps 25240, FPS 12; training waiting time: 1266.0.
+[train] Max reward -0.069, min reward: -0.081, Mean reward: -0.076.
+[train] Best val waiting time: 70.6, Value loss: 44712026.617, action loss: 0.00, dist entropy: 0.007.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 92.7.
+[Evaluation] wait rew: 3335.8; io rew: -1643.0; enter rew: 661.6.
+[train] Curr val waiting time: 92.7
+[train] Updates 640, num timesteps 25640, FPS 11; training waiting time: 1236.8.
+[train] Max reward -0.081, min reward: -0.170, Mean reward: -0.132.
+[train] Best val waiting time: 70.6, Value loss: 53599022.596, action loss: 0.00, dist entropy: 0.007.
+[train] Updates 650, num timesteps 26040, FPS 11; training waiting time: 1335.8.
+[train] Max reward -0.073, min reward: -0.091, Mean reward: -0.079.
+[train] Best val waiting time: 70.6, Value loss: 74147729.469, action loss: 0.00, dist entropy: 0.005.
+[train] Updates 660, num timesteps 26440, FPS 12; training waiting time: 1322.9.
+[train] Max reward -0.069, min reward: -0.087, Mean reward: -0.080.
+[train] Best val waiting time: 70.6, Value loss: 171286926.685, action loss: 0.03, dist entropy: 0.739.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 811 people: mean waiting time 87.4.
+[Evaluation] wait rew: 3346.1; io rew: -1600.0; enter rew: 660.0.
+[train] Curr val waiting time: 87.4
+[train] Updates 670, num timesteps 26840, FPS 11; training waiting time: 1392.0.
+[train] Max reward -0.048, min reward: -0.093, Mean reward: -0.077.
+[train] Best val waiting time: 70.6, Value loss: 157296872.343, action loss: 0.02, dist entropy: 0.739.
+[train] Updates 680, num timesteps 27240, FPS 11; training waiting time: 1386.7.
+[train] Max reward -0.078, min reward: -0.091, Mean reward: -0.084.
+[train] Best val waiting time: 70.6, Value loss: 88588867.533, action loss: 0.04, dist entropy: 0.683.
+[train] Updates 690, num timesteps 27640, FPS 12; training waiting time: 1436.6.
+[train] Max reward -0.081, min reward: -0.085, Mean reward: -0.083.
+[train] Best val waiting time: 70.6, Value loss: 93419519.084, action loss: 0.00, dist entropy: 0.232.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 818 people: mean waiting time 87.0.
+[Evaluation] wait rew: 3378.2; io rew: -1656.0; enter rew: 662.4.
+[train] Curr val waiting time: 87.0
+[train] Updates 700, num timesteps 28040, FPS 11; training waiting time: 1408.4.
+[train] Max reward 0.016, min reward: -0.082, Mean reward: -0.032.
+[train] Best val waiting time: 70.6, Value loss: 149377779.576, action loss: 0.00, dist entropy: 0.197.
+[train] Updates 710, num timesteps 28440, FPS 11; training waiting time: 1455.0.
+[train] Max reward -0.079, min reward: -0.132, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 136212029.024, action loss: 0.00, dist entropy: 0.196.
+[train] Updates 720, num timesteps 28840, FPS 11; training waiting time: 1468.2.
+[train] Max reward -0.019, min reward: -0.090, Mean reward: -0.066.
+[train] Best val waiting time: 70.6, Value loss: 65083093.516, action loss: 0.01, dist entropy: 0.053.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 89.0.
+[Evaluation] wait rew: 3369.8; io rew: -1720.0; enter rew: 662.4.
+[train] Curr val waiting time: 89.0
+[train] Updates 730, num timesteps 29240, FPS 11; training waiting time: 1498.7.
+[train] Max reward -0.089, min reward: -0.160, Mean reward: -0.114.
+[train] Best val waiting time: 70.6, Value loss: 128090829.959, action loss: 0.01, dist entropy: 0.043.
+[train] Updates 740, num timesteps 29640, FPS 11; training waiting time: 1532.8.
+[train] Max reward -0.094, min reward: -0.154, Mean reward: -0.115.
+[train] Best val waiting time: 70.6, Value loss: 86126189.687, action loss: 0.01, dist entropy: 0.044.
+[train] Updates 750, num timesteps 30040, FPS 11; training waiting time: 1517.1.
+[train] Max reward -0.022, min reward: -0.091, Mean reward: -0.066.
+[train] Best val waiting time: 70.6, Value loss: 48714611.687, action loss: 0.01, dist entropy: 0.049.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 89.0.
+[Evaluation] wait rew: 3369.8; io rew: -1720.0; enter rew: 662.4.
+[train] Curr val waiting time: 89.0
+[train] Updates 760, num timesteps 30440, FPS 11; training waiting time: 1511.0.
+[train] Max reward -0.081, min reward: -0.094, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 51573833.951, action loss: 0.01, dist entropy: 0.067.
+[train] Updates 770, num timesteps 30840, FPS 11; training waiting time: 1563.0.
+[train] Max reward -0.064, min reward: -0.088, Mean reward: -0.075.
+[train] Best val waiting time: 70.6, Value loss: 183340725.439, action loss: 0.00, dist entropy: 0.082.
+[train] Updates 780, num timesteps 31240, FPS 11; training waiting time: 1466.8.
+[train] Max reward -0.051, min reward: -0.091, Mean reward: -0.076.
+[train] Best val waiting time: 70.6, Value loss: 175557524.801, action loss: 0.01, dist entropy: 0.085.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 89.0.
+[Evaluation] wait rew: 3369.8; io rew: -1720.0; enter rew: 662.4.
+[train] Curr val waiting time: 89.0
+[train] Updates 790, num timesteps 31640, FPS 11; training waiting time: 1606.5.
+[train] Max reward -0.048, min reward: -0.153, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 118093854.699, action loss: 0.00, dist entropy: 0.076.
+[train] Updates 800, num timesteps 32040, FPS 11; training waiting time: 1627.0.
+[train] Max reward -0.081, min reward: -0.095, Mean reward: -0.090.
+[train] Best val waiting time: 70.6, Value loss: 297886487.033, action loss: 0.01, dist entropy: 0.075.
+[train] Updates 810, num timesteps 32440, FPS 11; training waiting time: 1563.1.
+[train] Max reward -0.077, min reward: -0.171, Mean reward: -0.112.
+[train] Best val waiting time: 70.6, Value loss: 67828402.657, action loss: 0.01, dist entropy: 0.073.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 820 people: mean waiting time 89.0.
+[Evaluation] wait rew: 3369.8; io rew: -1720.0; enter rew: 662.4.
+[train] Curr val waiting time: 89.0
+[train] Updates 820, num timesteps 32840, FPS 11; training waiting time: 1634.6.
+[train] Max reward -0.080, min reward: -0.096, Mean reward: -0.088.
+[train] Best val waiting time: 70.6, Value loss: 66174097.722, action loss: 0.00, dist entropy: 0.069.
+[train] Updates 830, num timesteps 33240, FPS 11; training waiting time: 1764.7.
+[train] Max reward -0.082, min reward: -0.095, Mean reward: -0.086.
+[train] Best val waiting time: 70.6, Value loss: 72279069.009, action loss: 0.14, dist entropy: 0.615.
+[train] Updates 840, num timesteps 33640, FPS 11; training waiting time: 1741.5.
+[train] Max reward -0.078, min reward: -0.090, Mean reward: -0.085.
+[train] Best val waiting time: 70.6, Value loss: 280401387.920, action loss: -0.00, dist entropy: 0.425.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 91.4.
+[Evaluation] wait rew: 3346.3; io rew: -1740.0; enter rew: 664.0.
+[train] Curr val waiting time: 91.4
+[train] Updates 850, num timesteps 34040, FPS 11; training waiting time: 1726.2.
+[train] Max reward -0.080, min reward: -0.084, Mean reward: -0.082.
+[train] Best val waiting time: 70.6, Value loss: 271658067.583, action loss: 0.00, dist entropy: 0.424.
+[train] Updates 860, num timesteps 34440, FPS 11; training waiting time: 1754.7.
+[train] Max reward -0.068, min reward: -0.099, Mean reward: -0.085.
+[train] Best val waiting time: 70.6, Value loss: 188973591.255, action loss: 0.00, dist entropy: 0.427.
+[train] Updates 870, num timesteps 34840, FPS 11; training waiting time: 1772.0.
+[train] Max reward 0.005, min reward: -0.232, Mean reward: -0.109.
+[train] Best val waiting time: 70.6, Value loss: 165988439.285, action loss: 0.01, dist entropy: 0.416.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 91.4.
+[Evaluation] wait rew: 3346.3; io rew: -1740.0; enter rew: 664.0.
+[train] Curr val waiting time: 91.4
+[train] Updates 880, num timesteps 35240, FPS 11; training waiting time: 1799.6.
+[train] Max reward -0.061, min reward: -0.170, Mean reward: -0.108.
+[train] Best val waiting time: 70.6, Value loss: 175089222.964, action loss: 0.00, dist entropy: 0.420.
+[train] Updates 890, num timesteps 35640, FPS 11; training waiting time: 1819.9.
+[train] Max reward -0.084, min reward: -0.093, Mean reward: -0.088.
+[train] Best val waiting time: 70.6, Value loss: 129196991.416, action loss: 0.01, dist entropy: 0.417.
+[train] Updates 900, num timesteps 36040, FPS 11; training waiting time: 1847.1.
+[train] Max reward -0.068, min reward: -0.095, Mean reward: -0.085.
+[train] Best val waiting time: 70.6, Value loss: 208134919.889, action loss: 0.00, dist entropy: 0.417.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 91.4.
+[Evaluation] wait rew: 3346.3; io rew: -1740.0; enter rew: 664.0.
+[train] Curr val waiting time: 91.4
+[train] Updates 910, num timesteps 36440, FPS 11; training waiting time: 1893.5.
+[train] Max reward -0.087, min reward: -0.098, Mean reward: -0.094.
+[train] Best val waiting time: 70.6, Value loss: 319313343.499, action loss: -0.00, dist entropy: 0.418.
+[train] Updates 920, num timesteps 36840, FPS 11; training waiting time: 1883.8.
+[train] Max reward -0.086, min reward: -0.098, Mean reward: -0.093.
+[train] Best val waiting time: 70.6, Value loss: 292241854.777, action loss: 0.01, dist entropy: 0.481.
+[train] Updates 930, num timesteps 37240, FPS 11; training waiting time: 1853.6.
+[train] Max reward -0.043, min reward: -0.093, Mean reward: -0.076.
+[train] Best val waiting time: 70.6, Value loss: 132016007.614, action loss: 0.00, dist entropy: 0.467.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 84.6.
+[Evaluation] wait rew: 3402.3; io rew: -1652.0; enter rew: 664.8.
+[train] Curr val waiting time: 84.6
+[train] Updates 940, num timesteps 37640, FPS 11; training waiting time: 1916.1.
+[train] Max reward -0.086, min reward: -0.092, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 15237114.389, action loss: 0.00, dist entropy: 0.519.
+[train] Updates 950, num timesteps 38040, FPS 11; training waiting time: 1922.6.
+[train] Max reward -0.081, min reward: -0.188, Mean reward: -0.123.
+[train] Best val waiting time: 70.6, Value loss: 42667140.049, action loss: 0.00, dist entropy: 0.554.
+[train] Updates 960, num timesteps 38440, FPS 11; training waiting time: 1934.6.
+[train] Max reward -0.058, min reward: -0.090, Mean reward: -0.072.
+[train] Best val waiting time: 70.6, Value loss: 124953507.059, action loss: 0.01, dist entropy: 0.049.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 810 people: mean waiting time 88.1.
+[Evaluation] wait rew: 3336.3; io rew: -1685.0; enter rew: 659.2.
+[train] Curr val waiting time: 88.1
+[train] Updates 970, num timesteps 38840, FPS 11; training waiting time: 1997.0.
+[train] Max reward -0.095, min reward: -0.131, Mean reward: -0.107.
+[train] Best val waiting time: 70.6, Value loss: 105408210.601, action loss: 0.01, dist entropy: 0.053.
+[train] Updates 980, num timesteps 39240, FPS 11; training waiting time: 1969.8.
+[train] Max reward -0.080, min reward: -0.092, Mean reward: -0.086.
+[train] Best val waiting time: 70.6, Value loss: 104384348.910, action loss: 0.00, dist entropy: 0.026.
+[train] Updates 990, num timesteps 39640, FPS 11; training waiting time: 1999.2.
+[train] Max reward -0.027, min reward: -0.090, Mean reward: -0.068.
+[train] Best val waiting time: 70.6, Value loss: 141004569.229, action loss: 0.00, dist entropy: 0.025.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 811 people: mean waiting time 88.5.
+[Evaluation] wait rew: 3337.1; io rew: -1757.0; enter rew: 654.4.
+[train] Curr val waiting time: 88.5
+[train] Updates 1000, num timesteps 40040, FPS 11; training waiting time: 1980.5.
+[train] Max reward -0.085, min reward: -0.093, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 114223193.081, action loss: -0.00, dist entropy: 0.020.
+[train] Updates 1010, num timesteps 40440, FPS 11; training waiting time: 2092.1.
+[train] Max reward -0.090, min reward: -0.101, Mean reward: -0.094.
+[train] Best val waiting time: 70.6, Value loss: 106320337.741, action loss: 0.00, dist entropy: 0.030.
+[train] Updates 1020, num timesteps 40840, FPS 11; training waiting time: 2085.4.
+[train] Max reward -0.072, min reward: -0.164, Mean reward: -0.111.
+[train] Best val waiting time: 70.6, Value loss: 412378111.365, action loss: 0.00, dist entropy: 0.013.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 811 people: mean waiting time 84.2.
+[Evaluation] wait rew: 3371.9; io rew: -1663.0; enter rew: 656.8.
+[train] Curr val waiting time: 84.2
+[train] Updates 1030, num timesteps 41240, FPS 11; training waiting time: 2132.8.
+[train] Max reward -0.096, min reward: -0.101, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 230136579.328, action loss: 0.00, dist entropy: 0.009.
+[train] Updates 1040, num timesteps 41640, FPS 11; training waiting time: 2197.6.
+[train] Max reward -0.089, min reward: -0.099, Mean reward: -0.094.
+[train] Best val waiting time: 70.6, Value loss: 96595074.253, action loss: 0.01, dist entropy: 0.016.
+[train] Updates 1050, num timesteps 42040, FPS 11; training waiting time: 2070.3.
+[train] Max reward -0.060, min reward: -0.096, Mean reward: -0.082.
+[train] Best val waiting time: 70.6, Value loss: 109300185.667, action loss: 0.00, dist entropy: 0.004.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 818 people: mean waiting time 89.8.
+[Evaluation] wait rew: 3355.1; io rew: -1732.0; enter rew: 664.8.
+[train] Curr val waiting time: 89.8
+[train] Updates 1060, num timesteps 42440, FPS 11; training waiting time: 2039.4.
+[train] Max reward -0.075, min reward: -0.083, Mean reward: -0.080.
+[train] Best val waiting time: 70.6, Value loss: 165732593.607, action loss: 0.01, dist entropy: 0.009.
+[train] Updates 1070, num timesteps 42840, FPS 11; training waiting time: 2172.2.
+[train] Max reward -0.070, min reward: -0.095, Mean reward: -0.086.
+[train] Best val waiting time: 70.6, Value loss: 117467493.328, action loss: 0.01, dist entropy: 0.007.
+[train] Updates 1080, num timesteps 43240, FPS 11; training waiting time: 2137.4.
+[train] Max reward 0.004, min reward: -0.096, Mean reward: -0.032.
+[train] Best val waiting time: 70.6, Value loss: 182745057.052, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 815 people: mean waiting time 89.4.
+[Evaluation] wait rew: 3346.1; io rew: -1679.0; enter rew: 657.6.
+[train] Curr val waiting time: 89.4
+[train] Updates 1090, num timesteps 43640, FPS 11; training waiting time: 2222.7.
+[train] Max reward -0.070, min reward: -0.100, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 70412175.723, action loss: 0.01, dist entropy: 0.000.
+[train] Updates 1100, num timesteps 44040, FPS 11; training waiting time: 2131.9.
+[train] Max reward -0.087, min reward: -0.101, Mean reward: -0.093.
+[train] Best val waiting time: 70.6, Value loss: 4405079.838, action loss: -0.00, dist entropy: 0.007.
+[train] Updates 1110, num timesteps 44440, FPS 11; training waiting time: 2281.0.
+[train] Max reward -0.081, min reward: -0.099, Mean reward: -0.092.
+[train] Best val waiting time: 70.6, Value loss: 3437544.616, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 815 people: mean waiting time 92.0.
+[Evaluation] wait rew: 3325.2; io rew: -1719.0; enter rew: 655.2.
+[train] Curr val waiting time: 92.0
+[train] Updates 1120, num timesteps 44840, FPS 11; training waiting time: 2219.8.
+[train] Max reward 0.024, min reward: -0.095, Mean reward: -0.018.
+[train] Best val waiting time: 70.6, Value loss: 5627165.476, action loss: 0.00, dist entropy: 0.006.
+[train] Updates 1130, num timesteps 45240, FPS 11; training waiting time: 2253.0.
+[train] Max reward -0.094, min reward: -0.175, Mean reward: -0.121.
+[train] Best val waiting time: 70.6, Value loss: 51541737.830, action loss: 0.01, dist entropy: 0.006.
+[train] Updates 1140, num timesteps 45640, FPS 11; training waiting time: 2415.0.
+[train] Max reward -0.085, min reward: -0.157, Mean reward: -0.112.
+[train] Best val waiting time: 70.6, Value loss: 3852863.379, action loss: 0.01, dist entropy: 0.003.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 818 people: mean waiting time 91.2.
+[Evaluation] wait rew: 3344.3; io rew: -1638.0; enter rew: 658.4.
+[train] Curr val waiting time: 91.2
+[train] Updates 1150, num timesteps 46040, FPS 11; training waiting time: 2252.8.
+[train] Max reward -0.091, min reward: -0.095, Mean reward: -0.093.
+[train] Best val waiting time: 70.6, Value loss: 4384876.894, action loss: 0.00, dist entropy: 0.002.
+[train] Updates 1160, num timesteps 46440, FPS 11; training waiting time: 2357.4.
+[train] Max reward -0.083, min reward: -0.100, Mean reward: -0.092.
+[train] Best val waiting time: 70.6, Value loss: 33121567.847, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1170, num timesteps 46840, FPS 11; training waiting time: 2338.0.
+[train] Max reward -0.009, min reward: -0.098, Mean reward: -0.062.
+[train] Best val waiting time: 70.6, Value loss: 1144645.647, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 809 people: mean waiting time 91.0.
+[Evaluation] wait rew: 3309.1; io rew: -1739.0; enter rew: 660.8.
+[train] Curr val waiting time: 91.0
+[train] Updates 1180, num timesteps 47240, FPS 11; training waiting time: 2348.6.
+[train] Max reward -0.096, min reward: -0.101, Mean reward: -0.099.
+[train] Best val waiting time: 70.6, Value loss: 1474389.975, action loss: 0.01, dist entropy: 0.005.
+[train] Updates 1190, num timesteps 47640, FPS 11; training waiting time: 2283.1.
+[train] Max reward -0.025, min reward: -0.101, Mean reward: -0.072.
+[train] Best val waiting time: 70.6, Value loss: 16926420.125, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1200, num timesteps 48040, FPS 11; training waiting time: 2429.4.
+[train] Max reward -0.087, min reward: -0.103, Mean reward: -0.097.
+[train] Best val waiting time: 70.6, Value loss: 3507957.009, action loss: 0.00, dist entropy: 0.003.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 809 people: mean waiting time 91.0.
+[Evaluation] wait rew: 3309.1; io rew: -1739.0; enter rew: 660.8.
+[train] Curr val waiting time: 91.0
+[train] Updates 1210, num timesteps 48440, FPS 11; training waiting time: 2507.1.
+[train] Max reward -0.100, min reward: -0.103, Mean reward: -0.101.
+[train] Best val waiting time: 70.6, Value loss: 1290070.078, action loss: 0.01, dist entropy: 0.009.
+[train] Updates 1220, num timesteps 48840, FPS 11; training waiting time: 2566.6.
+[train] Max reward -0.077, min reward: -0.100, Mean reward: -0.085.
+[train] Best val waiting time: 70.6, Value loss: 1282627.706, action loss: 0.01, dist entropy: 0.000.
+[train] Updates 1230, num timesteps 49240, FPS 11; training waiting time: 2557.8.
+[train] Max reward -0.095, min reward: -0.193, Mean reward: -0.128.
+[train] Best val waiting time: 70.6, Value loss: 2276220.504, action loss: -0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 823 people: mean waiting time 80.7.
+[Evaluation] wait rew: 3450.8; io rew: -1772.0; enter rew: 667.2.
+[train] Curr val waiting time: 80.7
+[train] Updates 1240, num timesteps 49640, FPS 11; training waiting time: 2622.9.
+[train] Max reward -0.098, min reward: -0.200, Mean reward: -0.135.
+[train] Best val waiting time: 70.6, Value loss: 114977322.957, action loss: 0.02, dist entropy: 0.006.
+[train] Updates 1250, num timesteps 50040, FPS 11; training waiting time: 2558.1.
+[train] Max reward -0.083, min reward: -0.100, Mean reward: -0.091.
+[train] Best val waiting time: 70.6, Value loss: 52579270.399, action loss: 0.00, dist entropy: 0.003.
+[train] Updates 1260, num timesteps 50440, FPS 11; training waiting time: 2457.9.
+[train] Max reward -0.091, min reward: -0.286, Mean reward: -0.160.
+[train] Best val waiting time: 70.6, Value loss: 4472123.170, action loss: 0.01, dist entropy: 0.004.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 810 people: mean waiting time 81.0.
+[Evaluation] wait rew: 3394.1; io rew: -1759.0; enter rew: 659.2.
+[train] Curr val waiting time: 81.0
+[train] Updates 1270, num timesteps 50840, FPS 11; training waiting time: 2532.7.
+[train] Max reward -0.082, min reward: -0.184, Mean reward: -0.124.
+[train] Best val waiting time: 70.6, Value loss: 3658153.894, action loss: 0.00, dist entropy: 0.004.
+[train] Updates 1280, num timesteps 51240, FPS 11; training waiting time: 2581.6.
+[train] Max reward -0.040, min reward: -0.200, Mean reward: -0.136.
+[train] Best val waiting time: 70.6, Value loss: 108954906.627, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1290, num timesteps 51640, FPS 11; training waiting time: 2640.7.
+[train] Max reward -0.078, min reward: -0.095, Mean reward: -0.088.
+[train] Best val waiting time: 70.6, Value loss: 171827011.308, action loss: 0.00, dist entropy: 0.007.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 810 people: mean waiting time 81.0.
+[Evaluation] wait rew: 3394.1; io rew: -1759.0; enter rew: 659.2.
+[train] Curr val waiting time: 81.0
+[train] Updates 1300, num timesteps 52040, FPS 11; training waiting time: 2561.2.
+[train] Max reward -0.081, min reward: -0.089, Mean reward: -0.085.
+[train] Best val waiting time: 70.6, Value loss: 17606988.198, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1310, num timesteps 52440, FPS 11; training waiting time: 2605.6.
+[train] Max reward -0.012, min reward: -0.086, Mean reward: -0.061.
+[train] Best val waiting time: 70.6, Value loss: 78537908.828, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1320, num timesteps 52840, FPS 11; training waiting time: 2762.8.
+[train] Max reward -0.075, min reward: -0.101, Mean reward: -0.091.
+[train] Best val waiting time: 70.6, Value loss: 273556639.179, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 814 people: mean waiting time 86.1.
+[Evaluation] wait rew: 3368.9; io rew: -1677.0; enter rew: 657.6.
+[train] Curr val waiting time: 86.1
+[train] Updates 1330, num timesteps 53240, FPS 11; training waiting time: 2671.9.
+[train] Max reward -0.059, min reward: -0.188, Mean reward: -0.108.
+[train] Best val waiting time: 70.6, Value loss: 293045959.015, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1340, num timesteps 53640, FPS 11; training waiting time: 2698.4.
+[train] Max reward -0.060, min reward: -0.106, Mean reward: -0.087.
+[train] Best val waiting time: 70.6, Value loss: 233320021.862, action loss: -0.00, dist entropy: 0.000.
+[train] Updates 1350, num timesteps 54040, FPS 11; training waiting time: 2711.2.
+[train] Max reward -0.083, min reward: -0.106, Mean reward: -0.095.
+[train] Best val waiting time: 70.6, Value loss: 331265805.829, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 814 people: mean waiting time 86.1.
+[Evaluation] wait rew: 3368.9; io rew: -1677.0; enter rew: 657.6.
+[train] Curr val waiting time: 86.1
+[train] Updates 1360, num timesteps 54440, FPS 11; training waiting time: 2671.0.
+[train] Max reward -0.080, min reward: -0.096, Mean reward: -0.086.
+[train] Best val waiting time: 70.6, Value loss: 217822651.979, action loss: 0.00, dist entropy: 0.003.
+[train] Updates 1370, num timesteps 54840, FPS 11; training waiting time: 2867.4.
+[train] Max reward -0.097, min reward: -0.102, Mean reward: -0.099.
+[train] Best val waiting time: 70.6, Value loss: 125782437.644, action loss: 0.01, dist entropy: 0.000.
+[train] Updates 1380, num timesteps 55240, FPS 11; training waiting time: 2877.8.
+[train] Max reward -0.097, min reward: -0.108, Mean reward: -0.101.
+[train] Best val waiting time: 70.6, Value loss: 77510836.822, action loss: 0.01, dist entropy: 0.005.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 819 people: mean waiting time 94.6.
+[Evaluation] wait rew: 3319.9; io rew: -1733.0; enter rew: 661.6.
+[train] Curr val waiting time: 94.6
+[train] Updates 1390, num timesteps 55640, FPS 11; training waiting time: 2911.1.
+[train] Max reward -0.099, min reward: -0.101, Mean reward: -0.100.
+[train] Best val waiting time: 70.6, Value loss: 47676319.895, action loss: 0.01, dist entropy: 0.000.
+[train] Updates 1400, num timesteps 56040, FPS 11; training waiting time: 2786.9.
+[train] Max reward -0.083, min reward: -0.108, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 24916553.981, action loss: -0.00, dist entropy: 0.000.
+[train] Updates 1410, num timesteps 56440, FPS 11; training waiting time: 2811.1.
+[train] Max reward -0.070, min reward: -0.194, Mean reward: -0.116.
+[train] Best val waiting time: 70.6, Value loss: 229561391.405, action loss: 0.00, dist entropy: 0.005.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 813 people: mean waiting time 96.2.
+[Evaluation] wait rew: 3283.1; io rew: -1787.0; enter rew: 657.6.
+[train] Curr val waiting time: 96.2
+[train] Updates 1420, num timesteps 56840, FPS 11; training waiting time: 2918.5.
+[train] Max reward -0.031, min reward: -0.102, Mean reward: -0.078.
+[train] Best val waiting time: 70.6, Value loss: 207152525.951, action loss: 0.01, dist entropy: 0.008.
+[train] Updates 1430, num timesteps 57240, FPS 11; training waiting time: 2898.2.
+[train] Max reward -0.087, min reward: -0.103, Mean reward: -0.097.
+[train] Best val waiting time: 70.6, Value loss: 223511034.792, action loss: 0.01, dist entropy: 0.005.
+[train] Updates 1440, num timesteps 57640, FPS 11; training waiting time: 2936.7.
+[train] Max reward -0.090, min reward: -0.102, Mean reward: -0.096.
+[train] Best val waiting time: 70.6, Value loss: 419714035.160, action loss: 0.01, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 816 people: mean waiting time 97.9.
+[Evaluation] wait rew: 3281.2; io rew: -1670.0; enter rew: 656.8.
+[train] Curr val waiting time: 97.9
+[train] Updates 1450, num timesteps 58040, FPS 11; training waiting time: 3040.2.
+[train] Max reward -0.082, min reward: -0.197, Mean reward: -0.125.
+[train] Best val waiting time: 70.6, Value loss: 194017883.997, action loss: 0.00, dist entropy: 0.006.
+[train] Updates 1460, num timesteps 58440, FPS 11; training waiting time: 2929.4.
+[train] Max reward -0.089, min reward: -0.090, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 167755797.316, action loss: 0.01, dist entropy: 0.013.
+[train] Updates 1470, num timesteps 58840, FPS 11; training waiting time: 2877.5.
+[train] Max reward -0.083, min reward: -0.110, Mean reward: -0.098.
+[train] Best val waiting time: 70.6, Value loss: 264330178.200, action loss: 0.01, dist entropy: 0.003.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 816 people: mean waiting time 97.9.
+[Evaluation] wait rew: 3281.2; io rew: -1670.0; enter rew: 656.8.
+[train] Curr val waiting time: 97.9
+[train] Updates 1480, num timesteps 59240, FPS 11; training waiting time: 3019.4.
+[train] Max reward -0.097, min reward: -0.208, Mean reward: -0.133.
+[train] Best val waiting time: 70.6, Value loss: 66879359.908, action loss: -0.00, dist entropy: 0.000.
+[train] Updates 1490, num timesteps 59640, FPS 11; training waiting time: 3124.0.
+[train] Max reward -0.077, min reward: -0.378, Mean reward: -0.186.
+[train] Best val waiting time: 70.6, Value loss: 61548238.337, action loss: -0.00, dist entropy: 0.009.
+[train] Updates 1500, num timesteps 60040, FPS 11; training waiting time: 3000.6.
+[train] Max reward -0.079, min reward: -0.100, Mean reward: -0.093.
+[train] Best val waiting time: 70.6, Value loss: 23281006.985, action loss: 0.01, dist entropy: 0.008.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 816 people: mean waiting time 97.9.
+[Evaluation] wait rew: 3281.2; io rew: -1670.0; enter rew: 656.8.
+[train] Curr val waiting time: 97.9
+[train] Updates 1510, num timesteps 60440, FPS 11; training waiting time: 3023.0.
+[train] Max reward -0.095, min reward: -0.204, Mean reward: -0.131.
+[train] Best val waiting time: 70.6, Value loss: 97575562.424, action loss: 0.01, dist entropy: 0.003.
+[train] Updates 1520, num timesteps 60840, FPS 11; training waiting time: 3170.6.
+[train] Max reward -0.093, min reward: -0.187, Mean reward: -0.128.
+[train] Best val waiting time: 70.6, Value loss: 536548166.682, action loss: 0.01, dist entropy: 0.002.
+[train] Updates 1530, num timesteps 61240, FPS 11; training waiting time: 3154.3.
+[train] Max reward -0.086, min reward: -0.100, Mean reward: -0.094.
+[train] Best val waiting time: 70.6, Value loss: 437283469.152, action loss: 0.00, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 814 people: mean waiting time 96.6.
+[Evaluation] wait rew: 3283.5; io rew: -1701.0; enter rew: 657.6.
+[train] Curr val waiting time: 96.6
+[train] Updates 1540, num timesteps 61640, FPS 11; training waiting time: 3112.4.
+[train] Max reward -0.080, min reward: -0.102, Mean reward: -0.094.
+[train] Best val waiting time: 70.6, Value loss: 484433407.344, action loss: 0.00, dist entropy: 0.008.
+[train] Updates 1550, num timesteps 62040, FPS 11; training waiting time: 3112.2.
+[train] Max reward -0.090, min reward: -0.225, Mean reward: -0.142.
+[train] Best val waiting time: 70.6, Value loss: 419065757.432, action loss: -0.00, dist entropy: 0.008.
+[train] Updates 1560, num timesteps 62440, FPS 11; training waiting time: 3149.2.
+[train] Max reward -0.091, min reward: -0.112, Mean reward: -0.099.
+[train] Best val waiting time: 70.6, Value loss: 405761839.388, action loss: -0.00, dist entropy: 0.003.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 812 people: mean waiting time 88.6.
+[Evaluation] wait rew: 3340.3; io rew: -1731.0; enter rew: 656.8.
+[train] Curr val waiting time: 88.6
+[train] Updates 1570, num timesteps 62840, FPS 11; training waiting time: 3257.8.
+[train] Max reward -0.098, min reward: -0.173, Mean reward: -0.126.
+[train] Best val waiting time: 70.6, Value loss: 277229675.635, action loss: 0.00, dist entropy: 0.000.
+[train] Updates 1580, num timesteps 63240, FPS 11; training waiting time: 3241.4.
+[train] Max reward -0.090, min reward: -0.109, Mean reward: -0.102.
+[train] Best val waiting time: 70.6, Value loss: 328802462.590, action loss: 0.00, dist entropy: 0.008.
+[train] Updates 1590, num timesteps 63640, FPS 11; training waiting time: 3165.2.
+[train] Max reward -0.088, min reward: -0.091, Mean reward: -0.089.
+[train] Best val waiting time: 70.6, Value loss: 407880449.310, action loss: 0.00, dist entropy: 0.005.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 812 people: mean waiting time 92.5.
+[Evaluation] wait rew: 3309.0; io rew: -1621.0; enter rew: 657.6.
+[train] Curr val waiting time: 92.5
+[train] Updates 1600, num timesteps 64040, FPS 11; training waiting time: 3218.2.
+[train] Max reward -0.003, min reward: -0.328, Mean reward: -0.147.
+[train] Best val waiting time: 70.6, Value loss: 864082932.361, action loss: 0.02, dist entropy: 0.011.
+[train] Updates 1610, num timesteps 64440, FPS 11; training waiting time: 3245.7.
+[train] Max reward -0.054, min reward: -0.108, Mean reward: -0.084.
+[train] Best val waiting time: 70.6, Value loss: 468337642.283, action loss: 0.00, dist entropy: 0.003.
+[train] Updates 1620, num timesteps 64840, FPS 11; training waiting time: 3300.7.
+[train] Max reward -0.077, min reward: -0.099, Mean reward: -0.090.
+[train] Best val waiting time: 70.6, Value loss: 755862064.492, action loss: 0.01, dist entropy: 0.000.
+-------------------------------------------------evaluation result-------------------------------------------------
+[Evaluation] for 812 people: mean waiting time 92.5.
+[Evaluation] wait rew: 3309.0; io rew: -1621.0; enter rew: 657.6.
+[train] Curr val waiting time: 92.5
+[train] Updates 1630, num timesteps 65240, FPS 11; training waiting time: 3413.4.
+[train] Max reward -0.106, min reward: -0.204, Mean reward: -0.140.
+[train] Best val waiting time: 70.6, Value loss: 537091989.730, action loss: 0.00, dist entropy: 0.003.

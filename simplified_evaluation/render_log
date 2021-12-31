@@ -1,0 +1,265 @@
+D:\Anaconda\Anaconda\envs\pytorch\python.exe E:/elevator/simplified_evaluation/my_mcts.py
+Choosing 1 for the 0 person at floor 2 going to floor 1
+Cur Time: 5
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  * * * * 0
+
+Choosing 0 for the 1 person at floor 2 going to floor 3
+Cur Time: 6
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+1  - - - - 1
+0  - - - - 0
+0  * u * * 0
+
+Choosing 2 for the 2 person at floor 3 going to floor 0
+Cur Time: 9
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+1  u d - - 0
+0  - - - - 0
+0  - - * * 0
+
+Choosing 0 for the 3 person at floor 7 going to floor 4
+Cur Time: 11
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  u - - - 1
+0  - - - - 0
+0  - * u - 0
+0  - - - * 0
+
+Choosing 3 for the 4 person at floor 6 going to floor 2
+Cur Time: 12
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 1
+0  - - - - 0
+0  - - - - 0
+0  u - - - 1
+0  - - u - 0
+0  - * - - 0
+0  - - - * 0
+
+Choosing 1 for the 5 person at floor 9 going to floor 7
+Cur Time: 14
+0  - - - - 1
+0  - - - - 0
+0  - - - - 1
+0  - - - - 1
+0  u - - - 0
+0  - - - - 0
+0  - - d - 0
+0  - - - - 0
+0  - * - u 0
+0  - - - - 0
+
+Choosing 3 for the 6 person at floor 9 going to floor 5
+Cur Time: 17
+0  - - - - 2
+0  - - - - 0
+0  d - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - u 0
+0  - u - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - d - 0
+
+Choosing 1 for the 7 person at floor 5 going to floor 9
+Cur Time: 18
+0  - - - - 2
+0  - - - - 0
+0  - - - - 0
+0  d - - - 1
+1  - - - u 0
+0  - u - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - * - 0
+
+Choosing 2 for the 8 person at floor 3 going to floor 0
+Cur Time: 21
+0  - - - - 2
+0  - - - - 0
+0  - - - - 0
+0  - u - - 0
+0  - - - d 0
+0  * - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - - 0
+0  - - * - 0
+
+Choosing 1 for the 9 person at floor 6 going to floor 3
+Cur Time: 24
+0  - u - - 2
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  * - - - 0
+0  - - - - 1
+0  - - u d 0
+0  - - - - 0
+0  - - - - 0
+
+Choosing 0 for the 10 person at floor 4 going to floor 3
+Cur Time: 25
+0  - d - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  * - - - 1
+0  - - u - 1
+0  - - - * 0
+0  - - - - 0
+0  - - - - 0
+
+Choosing 0 for the 11 person at floor 3 going to floor 1
+Cur Time: 26
+0  - - - - 0
+0  - d - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  d - - - 0
+0  - - d - 1
+0  - - - * 0
+0  - - - - 0
+0  - - - - 0
+
+Choosing 0 for the 12 person at floor 1 going to floor 0
+Cur Time: 28
+0  - - - - 0
+0  - - - - 0
+0  - d - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - - 0
+0  d - - - 0
+0  - - - * 0
+0  - - d - 1
+0  - - - - 0
+
+Choosing 0 for the 13 person at floor 0 going to floor 9
+Cur Time: 31
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - d - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - * 0
+0  d - - - 0
+1  - - * - 0
+
+Choosing 1 for the 14 person at floor 7 going to floor 0
+Cur Time: 34
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - d - - 0
+0  - - - * 0
+0  u - - - 0
+0  - - * - 0
+
+Choosing 3 for the 15 person at floor 5 going to floor 3
+Cur Time: 35
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - u - - 0
+0  u - - * 0
+0  - - - - 0
+0  - - * - 0
+
+Choosing 2 for the 16 person at floor 0 going to floor 2
+Cur Time: 37
+0  - - - - 0
+0  - - - - 0
+0  - - - - 1
+0  - - - - 0
+0  - u - - 1
+0  u - - - 0
+0  - - - u 0
+0  - - - - 0
+0  - - - - 0
+1  - - * - 0
+
+Choosing 0 for the 17 person at floor 9 going to floor 8
+Cur Time: 42
+0  u - - - 1
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - d - - 0
+0  - - - - 0
+0  - - - d 0
+0  - - * - 0
+0  - - - - 0
+0  - - - - 0
+
+Choosing 3 for the 18 person at floor 3 going to floor 1
+Cur Time: 45
+0  - - - - 0
+0  * - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - * 1
+0  - d * - 0
+0  - - - - 0
+0  - - - - 0
+
+Choosing 2 for the 19 person at floor 2 going to floor 1
+Cur Time: 48
+0  - - - - 0
+0  * - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - - - 0
+0  - - * - 1
+0  - - - d 0
+0  - * - - 0
+
+[[5, 2, 1, 9, 11], [6, 2, 3, 10, 12], [9, 3, 0, 14, 18], [11, 7, 4, 17, 21], [12, 6, 2, 20, 25], [14, 9, 7, 25, 28], [17, 9, 5, 25, 32], [18, 5, 9, 20, 25], [21, 3, 0, 26, 30], [24, 6, 3, 30, 35], [25, 4, 3, 26, 28], [26, 3, 1, 28, 31], [28, 1, 0, 31, 33], [31, 0, 9, 33, 43], [34, 7, 0, 40, 48], [35, 5, 3, 40, 43], [37, 0, 2, 38, 41], [42, 9, 8, 43, 45], [45, 3, 1, 46, 49], [48, 2, 1, 49, 51]]
+(4.1, 8.05)
+
+random: (8.45, 13.05)

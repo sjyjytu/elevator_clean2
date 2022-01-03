@@ -56,7 +56,7 @@ class SmecElevator(object):
         self._hall_dn_call = list()
 
         self._sync_floor = 0
-        self._target_floor = 0
+        self._target_floor = GO_FLOOR_NONE
         self._advance_floor = self._sync_floor
 
         self._service_direction = 1
@@ -189,8 +189,11 @@ class SmecElevator(object):
         self._sync_floor = current_floor
         # Get the current immediate target floor
         self._advance_floor = advance_floor
-        target_position = self.get_floor_position(self._target_floor)
-        remain_distance = self.calc_remain_distance(self._current_position, target_position)
+        if self._target_floor == GO_FLOOR_NONE:
+            remain_distance = 0
+        else:
+            target_position = self.get_floor_position(self._target_floor)
+            remain_distance = self.calc_remain_distance(self._current_position, target_position)
         # print('remain_distance: ', remain_distance)
         acc = select_max_acc(self._delta_floor * self._floor_height)
         # tmp_velocity, eff_dt = velocity_planner(self._current_velocity, remain_distance, self._maximum_acceleration,

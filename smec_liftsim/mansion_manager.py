@@ -350,7 +350,7 @@ class MansionManager(object):
         awt = []
         for ele_idx in ele_idxes:  # !
 
-            floor = self._elevators[ele_idx]._target_floor
+            floor = self._elevators[ele_idx]._sync_floor
             delta_distance = self._elevators[ele_idx]._remain_distance
             # if ele_idx == 0:
             #     print(self._elevators[ele_idx]._target_floor)

@@ -18,6 +18,10 @@
 # print(a.best_scheme)
 # a.func()
 # print(a.best_scheme)
-for i in range(64):
+# for i in range(64):
+#
+#     print(i, 0.98**i)
+import numpy as np
+for i in range(10):
 
-    print(i, 0.98**i)
+    print(np.random.rand(1,2,3))

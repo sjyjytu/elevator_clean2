@@ -175,6 +175,58 @@ def print_hallcall_along_time(data_dir_prefix='./train_data/new/', data_idx=2, f
     np.save('weights_%s_carcall.npy' % data_dirs[data_idx], carcalls)
     return upcalls, dncalls, carcalls
 
+
+def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
+    np.set_printoptions(precision=3, suppress=True, linewidth=200)
+
+    data_dirs = ['dnpeak', 'notpeak', 'lunchpeak', 'uppeak']
+    data_dir = data_dir_prefix + data_dirs[data_idx]
+    dataX = process2(data_dir=data_dir)
+    dataX = dataX[fileid]  # 指定文件
+    # dataX = np.average(dataX, axis=0)  # 均值
+    # z = np.sum(z, axis=0)  # 查看总人数
+    data = np.sum(dataX, axis=0)
+    start_sum = np.sum(data, axis=1, keepdims=True)
+    # end_sum = np.sum(data, axis=0, keepdims=True)
+
+    new_data = np.concatenate([data, start_sum], axis=1)
+
+    print('已知出发层，预测到达层的概率：')
+    print(data / start_sum)
+
+    # print(data)
+
+    # 应该上行和下行分开算？
+    separate_post_prob = np.zeros_like(data, dtype=np.float32)
+    for src in range(separate_post_prob.shape[0]):
+        dn = data[src][:src]
+        dn_sum = np.sum(dn)
+        up = data[src][src:]
+        up_sum = np.sum(up)
+        for dst in range(separate_post_prob.shape[1]):
+            if dst < src:
+                if dn_sum != 0:
+                    prob = float(data[src][dst]) / dn_sum
+                    separate_post_prob[src][dst] = prob
+            else:
+                if up_sum != 0:
+                    prob = float(data[src][dst]) / up_sum
+                    separate_post_prob[src][dst] = prob
+    print('已知出发层，预测到达层的概率（上下行分开）：')
+    print(separate_post_prob)
+
+
+    end_sum = np.sum(new_data, axis=0, keepdims=True)
+    new_data = np.concatenate([new_data, end_sum], axis=0)
+
+    # print(new_data)
+    print('出发层到到达层的独立概率：')
+    print(new_data/60)
+
+    # print(data)
+    # print(start_sum)
+    # print(end_sum)
+
 # draw_whole()
 # draw_one()
 # for i in range(4):
@@ -186,3 +238,5 @@ def print_hallcall_along_time(data_dir_prefix='./train_data/new/', data_idx=2, f
 
 # res = np.load('16floor_weights.npy')
 # print(res)
+
+print_flow_map()

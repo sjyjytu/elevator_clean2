@@ -46,11 +46,13 @@ from smec_liftsim.smec_constants import *
 from copy import deepcopy
 import random
 import time
+from smec_liftsim.utils import PersonType
+import json
 
 
 class SmecEnv:
     def __init__(self, render=False):
-        config_file = os.path.join(os.path.dirname(__file__) + '/smec_liftsim/rl_config2.ini')
+        config_file = '../smec_liftsim/rl_config2.ini'
         file_name = config_file
         config = configparser.ConfigParser()
         config.read(file_name)
@@ -60,7 +62,8 @@ class SmecEnv:
 
         self._config = MansionConfig(
             dt=time_step,
-            number_of_floors=int(config['MansionInfo']['NumberOfFloors']),
+            # number_of_floors=int(config['MansionInfo']['NumberOfFloors']),
+            number_of_floors=5,
             floor_height=float(config['MansionInfo']['FloorHeight']),
             maximum_acceleration=float(config['MansionInfo']['Acceleration']),
             maximum_speed=float(config['MansionInfo']['RateSpeed']),
@@ -80,7 +83,7 @@ class SmecEnv:
             from smec_liftsim.rendering import Render
             self.viewer = Render(self.mansion)
         self.elevator_num = self.mansion.attribute.ElevatorNumber
-        self.floor_num = int(config['MansionInfo']['NumberOfFloors'])
+        self.floor_num = self._config.number_of_floors
 
         self.seed_c = None
 
@@ -95,47 +98,42 @@ class SmecEnv:
         cur_time = raw_time % (24 * 3600)
         return [cur_day, int(cur_time // 3600 + 7), int(cur_time % 3600 // 60), int(cur_time % 60)]
 
-    def step_dt(self, action, verbose=False):
-        unallocated_up, unallocated_dn = self.mansion.get_unallocated_floors()
-        all_elv_up_fs, all_elv_down_fs = [[] for _ in range(self.elevator_num)], [[] for _ in range(self.elevator_num)]
-        is_valid = 0
-        for up_floor in unallocated_up:
-            cur_elev = action
-            all_elv_up_fs[cur_elev].append(up_floor)
-            is_valid += 1
-        for dn_floor in unallocated_dn:
-            cur_elev = action
-            all_elv_down_fs[cur_elev].append(dn_floor)
-            is_valid += 1
-        if verbose and is_valid:
-            print(f'Choosing {action} for up:{unallocated_up}, dn:{unallocated_dn}, valid:{is_valid}')
-        action_to_execute = []
-        for idx in range(self.elevator_num):
-            action_to_execute.append(ElevatorHallCall(all_elv_up_fs[idx], all_elv_down_fs[idx]))
-        calling_wt, arrive_wt, loaded_num, enter_num, no_io_masks, awt = self.mansion.run_mansion(action_to_execute)
-        # self.mansion.generate_person()
-        new_obs = None
-        reward = 0
-        done = self.mansion.person_generator.done
-        info = {}
-        return new_obs, reward, done, info
-
     def step_an_episode(self, person_list):
         self.mansion.generate_person(person_list=person_list)
         unallocated_up, unallocated_dn = self.mansion.get_unallocated_floors()
         action = [ElevatorHallCall(unallocated_up, unallocated_dn)]
-        while not self.mansion.finish_person_num != len(person_list):
+        last_state = ELEVATOR_STOP_DOOR_CLOSE
+        route = [self.mansion._elevators[0]._sync_floor]
+
+        # 在模拟运行之前，可以按概率得出一个可能的停靠向量，代表在各个楼层停靠的概率
+        vec_approxim = [0 for i in range(self.floor_num*2)]
+        vec_approxim[self.mansion._elevators[0]._sync_floor] = 1
+        for uc in unallocated_up:
+            vec_approxim[uc] = 1
+            for pred_carcall in range(uc, self.floor_num):
+                vec_approxim[pred_carcall] += 1/(self.floor_num-uc)
+        for dc in unallocated_dn:
+            dc = dc + self.floor_num
+            vec_approxim[dc] = 1
+            for pred_carcall in range(self.floor_num, dc):
+                vec_approxim[pred_carcall] += 1 / (dc - self.floor_num)
+        for carcall in self.mansion._elevators[0]._car_call:
+            vec_approxim[carcall] = 1
+        for i in range(self.floor_num*2):
+            vec_approxim[i] = min(1, vec_approxim[i])
+
+
+        while self.mansion.finish_person_num != len(person_list)+len(init_persons):
             calling_wt, arrive_wt, loaded_num, enter_num, no_io_masks, awt \
                 = self.mansion.run_mansion(action, use_rules=False, replace_hallcall=True)
+            # self.render()
             action = None
-        new_obs = None
-        reward = 0
-        done = True
-        info = {}
-        return new_obs, reward, done, info
-
-    def step(self, action, person_list=None):
-        return self.step_an_episode(person_list)
+            new_state = self.mansion._elevators[0]._run_state
+            if last_state == ELEVATOR_RUN and new_state == ELEVATOR_STOP_DOOR_OPENING:
+                flr = self.mansion._elevators[0]._sync_floor
+                route.append(flr)
+            last_state = new_state
+        return route, vec_approxim
 
     def seed(self, seed=None):
         set_seed(seed)
@@ -157,32 +155,8 @@ class SmecEnv:
         pass
 
     @property
-    def attribute(self):
-        return self.mansion.attribute
-
-    @property
     def state(self):
         return self.mansion.state
-
-    @property
-    def statistics(self):
-        return self.mansion.get_statistics()
-
-    @property
-    def log_debug(self):
-        return self._config.log_notice
-
-    @property
-    def log_notice(self):
-        return self._config.log_notice
-
-    @property
-    def log_warning(self):
-        return self._config.log_warning
-
-    @property
-    def log_fatal(self):
-        return self._config.log_fatal
 
     def get_reward(self):
         waiting_time = []
@@ -196,50 +170,143 @@ class SmecEnv:
                 continue
         return np.mean(waiting_time), np.mean(transmit_time)
 
+    def get_reward_per_flr(self):
+        ret = []
+        for id in self.mansion.person_info.keys():
+            if id < len(init_persons):
+                continue
+            src = person_list[id-len(init_persons)].SourceFloor - 1
+            dst = person_list[id-len(init_persons)].TargetFloor - 1
+            info = self.mansion.person_info[id]
+            waiting_time = info[2]
+            transmit_time = info[4]
+            ret.append({'id': id,
+                        'src': src,
+                        'dst': dst,
+                        'waiting_time': waiting_time,
+                        'transmit_time': transmit_time,
+                        })
+        return ret
 
-def generate_person():
-    from smec_liftsim.utils import PersonType
+
+def generate_person(flow_map):
     ret_persons = []
     # 按概率随机生成人，根据电梯速度和方向，指定方向和位置来生成？不生成第三趟的人
-    for id in range(5):
-        ret_persons.append(
-            PersonType(
-                id,
-                75,
-                0,  # src
-                7,  # dst
-                0,  # cur time
-                0
-            ))
+    id = len(init_persons)
+    for i in range(5):
+        samples = np.random.rand(*flow_map.shape)
+        for src in range(samples.shape[0]):
+            for dst in range(samples.shape[1]):
+                if samples[src, dst] < flow_map[src, dst]:
+                    ret_persons.append(
+                        PersonType(
+                            id,
+                            75,
+                            src+1,  # src
+                            dst+1,  # dst
+                            0,  # cur time
+                            0
+                        ))
+                    id += 1
     return ret_persons
 
 
-def init_elevator(elev):
+def init_elevator(elev, init_persons=None):
     # 先设定电梯的方向速度位置，已载乘客和car call情况
+    if init_persons is None:
+        init_persons = []
+    for ip in init_persons:
+        elev._loaded_person[ip.TargetFloor - 1].append(deepcopy(ip))
+        elev._load_weight += ip.Weight
+        elev.press_button(ip.TargetFloor - 1)
+        elev_env.mansion.person_info[ip.ID] = [0, 0, 0, 0]
+    elev._current_position = 3
+    elev._sync_floor = 1
+
     pass
 
 
 def save_data(df):
+    # print(person_list, route, info)
+    # for p in person_list:
+    #     print(p.ID, p.SourceFloor, p.TargetFloor)
+    # print(route)
+    vec = [0 for i in range(elev_env.floor_num*2)]
+    top_idx = 0
+    top_max = route[0]
+    for r in range(len(route)):
+        if route[r] > top_max:
+            top_max = route[r]
+            top_idx = r
+    up_route = route[0:top_idx+1]
+    dn_route = route[top_idx:]
+
+    if len(up_route) == 1:
+        up_route = []
+    if len(dn_route) == 1:
+        dn_route = []
+
+    for ur in up_route:
+        vec[ur] = 1
+    for dr in dn_route:
+        vec[dr+elev_env.floor_num] = 1
+
+    # print('x:', vec)
+    src2wt = [0 for i in range(elev_env.floor_num*2)]
+    src2pnum = [0 for i in range(elev_env.floor_num*2)]
+    for i in info:
+        src = i['src']
+        dst = i['dst']
+        if src < dst:
+            src2wt[src] += i['waiting_time']
+            src2pnum[src] += 1
+        else:
+            src2wt[src+elev_env.floor_num] += i['waiting_time']
+            src2pnum[src+elev_env.floor_num] += 1
+    for i in range(elev_env.floor_num*2):
+        if src2pnum[i] != 0:
+            src2wt[i] /= src2pnum[i]
+    # print('y:', src2wt)
+    x = json.dumps({'x': vec, 'y': src2wt, 'x_prime': vec_approxim})
+    print(x, file=df)
     pass
 
 
 if __name__ == '__main__':
 
-    dataset_file = open('dataset.txt', 'a')
+    dataset_file = open('dataset2.txt', 'a')
 
     elev_env = SmecEnv(render=False)
-    for d in range(100000):
-        elev_env.reset()
-        init_elevator(elev_env.mansion._elevators[0])
+    # flow_map = np.zeros((elev_env.floor_num, elev_env.floor_num))
+    flow_map = np.array(
+        [
+            # [0, 0.1, 0.12, 0.14, 0.15],
+            [0, 0, 0, 0, 0],
+            [0.1, 0, 0.05, 0.04, 0.05],
+            [0.1, 0.02, 0, 0.04, 0.05],
+            [0.1, 0.02, 0.02, 0, 0.05],
+            [0.1, 0.02, 0.02, 0.04, 0],
+        ]
+    )
+    # init_persons = [PersonType(0, 75, 0+1, 2+1, 0, 0)]
+    init_persons = []
 
-        person_list = generate_person()
-        elev_env.step_an_episode(person_list)
+    for d in range(3000):
+        print(d)
+        elev_env.reset()
+        init_elevator(elev_env.mansion._elevators[0], init_persons)
+
+        person_list = []
+        while not person_list:
+            person_list = generate_person(flow_map)
+        route, vec_approxim = elev_env.step_an_episode(person_list)
+
+        info = elev_env.get_reward_per_flr()
 
         save_data(dataset_file)
 
         # print(elev_env.person_info)
-        print(elev_env.get_reward())  # (0.35, 3.8)
-
+        # print(elev_env.get_reward())  # (0.35, 3.8)
 
 
 

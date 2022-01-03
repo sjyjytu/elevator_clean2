@@ -25,7 +25,7 @@ class PretrainModel(nn.Module):
 class DatasetFromTXT(Dataset):
     def __init__(self, datafile, transforms=None, ):
         print('loading data...')
-        self.data, self.labels = self.read_data_from_txt(datafile)
+        self.data, self.labels, self.data_real = self.read_data_from_txt(datafile)
         print(f'load data successfully with {len(self.data)} piece of data!')
         print(self.labels.shape)
         self.transforms = transforms
@@ -35,7 +35,10 @@ class DatasetFromTXT(Dataset):
         # data_as_dict = self.data[index]
         data_as_np = self.data[index]
         data_as_tensor = torch.from_numpy(data_as_np).float()
-        return (data_as_tensor, single_data_label)
+
+        data_real_as_np = self.data_real[index]
+        data_real_as_tensor = torch.from_numpy(data_real_as_np).float()
+        return (data_as_tensor, single_data_label, data_real_as_tensor)
         # return (data_as_dict, single_data_label)
 
     def __len__(self):
@@ -43,6 +46,7 @@ class DatasetFromTXT(Dataset):
 
     def read_data_from_txt(self, datafile):
         Xs = []
+        X_reals = []
         ys = []
         with open(datafile) as f:
             for line in f:
@@ -52,10 +56,12 @@ class DatasetFromTXT(Dataset):
                 # print(line)
                 data = json.loads(line)
                 x = data['x_prime']
+                x_real = data['x']
                 y = data['y']
                 Xs.append(x)
+                X_reals.append(x_real)
                 ys.append(y)
-        return np.array(Xs), np.array(ys)
+        return np.array(Xs), np.array(ys), np.array(X_reals)
 
 
 n_epochs = 10000  # 训练轮数epoch 的数目
@@ -71,7 +77,7 @@ train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size
 
 model = PretrainModel(16)
 SAVE_PATH_PREFIX = './save_models16/model'
-model_index = 19944
+model_index = 9955
 if model_index != 0:
     model.load_state_dict(torch.load(f'{SAVE_PATH_PREFIX}_{model_index}.pt'))
 
@@ -83,13 +89,13 @@ def train():
     # 定义损失函数和优化器
     lossfunc = torch.nn.MSELoss()
     best_loss = 10000000
-    optimizer = torch.optim.SGD(params=model.parameters(), lr=0.00001)
+    optimizer = torch.optim.SGD(params=model.parameters(), lr=0.001)
     # 开始训练
     for epoch in range(n_epochs):
         train_loss = 0.0
         train_num = 0
         model.train()
-        for i, (data, target) in enumerate(train_loader):
+        for i, (data, target, _) in enumerate(train_loader):
             optimizer.zero_grad()  # 清空上一步的残余更新参数值
             output = model(data)  # 得到预测值
             target = torch.tensor(target, dtype=torch.float32)
@@ -119,17 +125,32 @@ def train():
             print(f'===========================Saving model {str(model_index + epoch + 1).zfill(4)}.pt with test loss {train_loss:.6f} ===========================')
 
 
-train()
+# train()
 
 
 def evaluate():
     test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
-    for i, (data, target) in enumerate(test_loader):
-        print(data)
-        print(target)
-        y = model(data)
-        print(y)
-        a = input('')
+    lossfunc = torch.nn.MSELoss()
+    np.set_printoptions(precision=3, suppress=True, linewidth=200)
+    for i, (data, target, data_real) in enumerate(test_loader):
+        with torch.no_grad():
+            # print("x':", data.numpy())
+            # print("x: ", data_real.numpy())
+            # 为了显示对齐
+            print("x' and x:")
+            print(np.concatenate((data.numpy(), data_real.numpy()), axis=1))
+            # print(target)
+            y = model(data)
+            # y = model(data_real)
+            mask = target > 0
+            y = y * mask
+            print("pred:", y[mask].numpy())
+            print("real:", target[mask].numpy())
+            loss = lossfunc(y, target)
+            print("loss:", loss.item())
+            delta = y - target
+            print("delta", delta[mask].numpy())
+            a = input('')
 
 
-# evaluate()
+evaluate()

@@ -63,7 +63,7 @@ class SmecEnv:
         self._config = MansionConfig(
             dt=time_step,
             # number_of_floors=int(config['MansionInfo']['NumberOfFloors']),
-            number_of_floors=5,
+            number_of_floors=16,
             floor_height=float(config['MansionInfo']['FloorHeight']),
             maximum_acceleration=float(config['MansionInfo']['Acceleration']),
             maximum_speed=float(config['MansionInfo']['RateSpeed']),
@@ -108,15 +108,15 @@ class SmecEnv:
         # 在模拟运行之前，可以按概率得出一个可能的停靠向量，代表在各个楼层停靠的概率
         vec_approxim = [0 for i in range(self.floor_num*2)]
         vec_approxim[self.mansion._elevators[0]._sync_floor] = 1
+        separate_post_prob = np.load('separate_post_prob.npy')
         for uc in unallocated_up:
             vec_approxim[uc] = 1
             for pred_carcall in range(uc, self.floor_num):
-                vec_approxim[pred_carcall] += 1/(self.floor_num-uc)
+                vec_approxim[pred_carcall] += separate_post_prob[uc][pred_carcall]
         for dc in unallocated_dn:
-            dc = dc + self.floor_num
-            vec_approxim[dc] = 1
-            for pred_carcall in range(self.floor_num, dc):
-                vec_approxim[pred_carcall] += 1 / (dc - self.floor_num)
+            vec_approxim[dc + self.floor_num] = 1
+            for pred_carcall in range(0, dc):
+                vec_approxim[pred_carcall + self.floor_num] += separate_post_prob[dc][pred_carcall]
         for carcall in self.mansion._elevators[0]._car_call:
             vec_approxim[carcall] = 1
         for i in range(self.floor_num*2):
@@ -126,7 +126,8 @@ class SmecEnv:
         while self.mansion.finish_person_num != len(person_list)+len(init_persons):
             calling_wt, arrive_wt, loaded_num, enter_num, no_io_masks, awt \
                 = self.mansion.run_mansion(action, use_rules=False, replace_hallcall=True)
-            # self.render()
+            if self.viewer:
+                self.render()
             action = None
             new_state = self.mansion._elevators[0]._run_state
             if last_state == ELEVATOR_RUN and new_state == ELEVATOR_STOP_DOOR_OPENING:
@@ -193,7 +194,7 @@ def generate_person(flow_map):
     ret_persons = []
     # 按概率随机生成人，根据电梯速度和方向，指定方向和位置来生成？不生成第三趟的人
     id = len(init_persons)
-    for i in range(5):
+    for i in range(1):
         samples = np.random.rand(*flow_map.shape)
         for src in range(samples.shape[0]):
             for dst in range(samples.shape[1]):
@@ -220,8 +221,8 @@ def init_elevator(elev, init_persons=None):
         elev._load_weight += ip.Weight
         elev.press_button(ip.TargetFloor - 1)
         elev_env.mansion.person_info[ip.ID] = [0, 0, 0, 0]
-    elev._current_position = 3
-    elev._sync_floor = 1
+    elev._current_position = 0
+    elev._sync_floor = 0
 
     pass
 
@@ -274,24 +275,16 @@ def save_data(df):
 
 if __name__ == '__main__':
 
-    dataset_file = open('dataset2.txt', 'a')
+    dataset_file = open('dataset16_2.txt', 'a')
 
-    elev_env = SmecEnv(render=False)
+    elev_env = SmecEnv(render=True)
     # flow_map = np.zeros((elev_env.floor_num, elev_env.floor_num))
-    flow_map = np.array(
-        [
-            # [0, 0.1, 0.12, 0.14, 0.15],
-            [0, 0, 0, 0, 0],
-            [0.1, 0, 0.05, 0.04, 0.05],
-            [0.1, 0.02, 0, 0.04, 0.05],
-            [0.1, 0.02, 0.02, 0, 0.05],
-            [0.1, 0.02, 0.02, 0.04, 0],
-        ]
-    )
+    flow_map = np.load('independent_flow_map.npy') / 2
+    print(flow_map)
     # init_persons = [PersonType(0, 75, 0+1, 2+1, 0, 0)]
     init_persons = []
 
-    for d in range(3000):
+    for d in range(10000):
         print(d)
         elev_env.reset()
         init_elevator(elev_env.mansion._elevators[0], init_persons)
@@ -303,7 +296,7 @@ if __name__ == '__main__':
 
         info = elev_env.get_reward_per_flr()
 
-        save_data(dataset_file)
+        # save_data(dataset_file)
 
         # print(elev_env.person_info)
         # print(elev_env.get_reward())  # (0.35, 3.8)

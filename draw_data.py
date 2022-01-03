@@ -188,6 +188,7 @@ def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
     data = np.sum(dataX, axis=0)
     start_sum = np.sum(data, axis=1, keepdims=True)
     # end_sum = np.sum(data, axis=0, keepdims=True)
+    print(data)
 
     new_data = np.concatenate([data, start_sum], axis=1)
 
@@ -214,6 +215,7 @@ def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
                     separate_post_prob[src][dst] = prob
     print('已知出发层，预测到达层的概率（上下行分开）：')
     print(separate_post_prob)
+    np.save('smec_ml2/separate_post_prob.npy', separate_post_prob)
 
 
     end_sum = np.sum(new_data, axis=0, keepdims=True)
@@ -222,6 +224,7 @@ def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
     # print(new_data)
     print('出发层到到达层的独立概率：')
     print(new_data/60)
+    np.save('smec_ml2/independent_flow_map.npy', data / 60)
 
     # print(data)
     # print(start_sum)

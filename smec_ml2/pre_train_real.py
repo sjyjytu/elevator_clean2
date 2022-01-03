@@ -51,7 +51,7 @@ class DatasetFromTXT(Dataset):
                 # line = line.replace('\'', '\"')
                 # print(line)
                 data = json.loads(line)
-                x = data['x_prime']
+                x = data['x']
                 y = data['y']
                 Xs.append(x)
                 ys.append(y)
@@ -70,8 +70,8 @@ test_size = len(dataset) - train_size
 train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
 
 model = PretrainModel(16)
-SAVE_PATH_PREFIX = './save_models16/model'
-model_index = 19944
+SAVE_PATH_PREFIX = './save_models16_real/model'
+model_index = 0
 if model_index != 0:
     model.load_state_dict(torch.load(f'{SAVE_PATH_PREFIX}_{model_index}.pt'))
 
@@ -83,7 +83,7 @@ def train():
     # 定义损失函数和优化器
     lossfunc = torch.nn.MSELoss()
     best_loss = 10000000
-    optimizer = torch.optim.SGD(params=model.parameters(), lr=0.00001)
+    optimizer = torch.optim.SGD(params=model.parameters(), lr=0.001)
     # 开始训练
     for epoch in range(n_epochs):
         train_loss = 0.0

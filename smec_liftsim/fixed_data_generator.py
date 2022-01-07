@@ -36,9 +36,9 @@ class FixedDataGenerator(PersonGeneratorBase):
 
         # generate dataset
         self.data, self.used_ele = generate_dataset_from_csv_to_pipline(self.data_file, data_of_section=self.data_of_section)
+        self.total_person_num = self.data.qsize()
         self.next_person = None if self.data.empty() else self.data.get()
         self.done = False
-        self.total_person_num = self.data.qsize()
 
     def reset(self):
         # next file
@@ -49,10 +49,10 @@ class FixedDataGenerator(PersonGeneratorBase):
 
         self._cur_id = 0
         self.data, self.used_ele = generate_dataset_from_csv_to_pipline(self.data_file, data_of_section=self.data_of_section)
+        self.total_person_num = self.data.qsize()
         # print(list(self.data.queue))
         self.next_person = None if self.data.empty() else self.data.get()
         self.done = False
-        self.total_person_num = self.data.qsize()
 
     def generate_person(self):
         """

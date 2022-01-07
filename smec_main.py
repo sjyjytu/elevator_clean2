@@ -232,9 +232,9 @@ def main():
         evaluate_args = {'use_rules': args.use_rules}
         if args.evaluate_method == 'rl':
             model_path = os.path.join(log_dir, args.exp_name + ".pt")
-            actor_critic = torch.load(model_path, map_location=device)[0]
-            # actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
-            # actor_critic.open_mask = False
+            # actor_critic = torch.load(model_path, map_location=device)[0]
+            actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
+            actor_critic.open_mask = False
             evaluate_args['actor_critic'] = actor_critic
             print('mask: ', actor_critic.open_mask)
 

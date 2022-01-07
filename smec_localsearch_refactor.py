@@ -49,7 +49,8 @@ import time
 
 
 class SmecEnv:
-    def __init__(self, data_file='train_data/new/lunchpeak/LunchPeak1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
+    def __init__(self, data_file='smec_rl/simple_dataset_v2.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
+    # def __init__(self, data_file='train_data/new/lunchpeak/LunchPeak1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/uppeak/UpPeakFlow1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/dnpeak/DnPeakFlow1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/notpeak/NotPeak1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
@@ -63,9 +64,9 @@ class SmecEnv:
 
         time_step = float(config['Configuration']['RunningTimeStep'])
         assert time_step <= 1, 'RunningTimeStep in config.ini must be less than 1 in order to ensure accuracy.'
-        dos = '00:00-10:00'
-        # dos = '00:00-20:00'
-        # dos = ''
+        # dos = '00:00-10:00'
+        # dos = '30:00-40:00'
+        dos = ''
         if dos == '':
             st = 0
         else:

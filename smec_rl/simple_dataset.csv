@@ -1,0 +1,20 @@
+PASSENGER LIST,
+No average data for Passenger List, so Run 1 selected.,
+This data is for all the passengers generated over complete duration of the simulation,
+Total number of passengers,,,,,543,
+Time last passenger arrived at destination (s),,,,,12:55:50.46550,
+
+Time,Arrival,Destination,Mass,Capacity,Loading,Unloading,Elevator,Time,Time,Waiting,Transit,Actual,Reverse,
+Arrived,Floor,Floor,,Factor,Time,Time,Used,Elevator,Reached,Time,Time,Destination,Journey,
+,,,,,,,,Arrived,Destination,
+(s),,,(kg),(%),(s),(s),(s),(s),(s),(s),(s),
+01:00:02.3602,Level 1,Level 5,75.,80.0,1.2,1.2,1,01:00:02.3602,01:00:18.3618,0.0,15.9,Level 5,0,
+01:00:05.3605,Level 12,Level 1,75.,80.0,1.2,1.2,3,01:00:26.3626,01:00:51.3651,21.2,24.4,Level 1,0,
+01:00:08.3608,Level 1,Level 15,75.,80.0,1.2,1.2,4,01:00:08.3608,01:01:03.3663,0.0,54.7,Level 15,0,
+01:00:11.3611,Level 3,Level 1,75.,80.0,1.2,1.2,2,01:00:17.3617,01:00:31.3631,6.3,13.6,Level 1,0,
+01:00:12.3612,Level 1,Level 15,75.,80.0,1.2,1.2,4,01:00:08.3608,01:01:03.3663,0.0,50.7,Level 15,0,
+01:00:13.3613,Level 1,Level 3,75.,80.0,1.2,1.2,4,01:00:08.3608,01:00:26.3626,0.0,12.9,Level 3,0,
+01:00:13.3613,Level 1,Level 10,75.,80.0,1.2,1.2,4,01:00:08.3608,01:00:46.3646,0.0,32.5,Level 10,0,
+01:00:15.3615,Level 4,Level 1,75.,80.0,1.2,1.2,1,01:00:30.3630,01:00:45.3645,14.9,14.8,Level 1,0,
+
+

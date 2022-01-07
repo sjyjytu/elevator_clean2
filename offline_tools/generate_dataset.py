@@ -101,7 +101,7 @@ def generate_dataset_from_csv_to_pipline(data_file, dt=0.5, data_of_section=''):
 
     awt /= collected_data.qsize()
     att /= collected_data.qsize()
-    print(data_file, awt, att)
+    # print(data_file, awt, att)
     return collected_data, used_ele
 
 

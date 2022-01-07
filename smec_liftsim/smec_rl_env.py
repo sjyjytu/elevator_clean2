@@ -29,12 +29,8 @@ class SmecRLEnv(gym.Env):
     """
     RL environment for SMEC elevators.
     """
-
-    # def __init__(self, data_file='E:\\elevator\\4Ele16FloorUpPeakFlow1_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
-    # def __init__(self, data_file='E:\\elevator\\train_data\\up_peak_normal\\4Ele16FloorUpPeakFlow28_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
-    # def __init__(self, data_file='train_data/up_peak_normal/4Ele16FloorUpPeakFlow1_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
-    # def __init__(self, data_file='train_data/new/uppeak/UpPeakFlow1_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
-    def __init__(self, data_file='train_data/new/lunchpeak/LunchPeak1_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
+    def __init__(self, data_file='./smec_rl/simple_dataset_v2.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
+    # def __init__(self, data_file='train_data/new/lunchpeak/LunchPeak1_elvx.csv', config_file=None, render=True, forbid_unrequired=True, seed=None, forbid_uncalled=False,
                  use_graph=True, gamma=0.99, real_data=True, use_advice=False, special_reward=False, data_dir=None, file_begin_idx=None):
         if not config_file:
             config_file = os.path.join(os.path.dirname(__file__) + '/rl_config2.ini')
@@ -45,9 +41,9 @@ class SmecRLEnv(gym.Env):
 
         time_step = float(config['Configuration']['RunningTimeStep'])
         assert time_step <= 1, 'RunningTimeStep in config.ini must be less than 1 in order to ensure accuracy.'
-        dos = '10:00-20:00'
+        # dos = '10:00-20:00'
         # dos = '50:00-60:00'
-        # dos = ''
+        dos = ''
         if dos == '':
             st = 0
         else:
@@ -312,9 +308,12 @@ class SmecRLEnv(gym.Env):
         next_call_come = False
         cur_time = self._config.raw_time
         reward = np.zeros((self.floor_num*2, ))
+        arrive_wts = [[] for i in range(self.elevator_num)]
         while not next_call_come and not self.mansion.is_done:
             calling_wt, arrive_wt, loaded_num, enter_num, no_io_masks, awt, hall_waiting_rewards, car_waiting_rewards \
                 = self.mansion.run_mansion(action_to_execute, special_reward=True, advantage_floor=advantage_floor)
+            for i in range(self.elevator_num):
+                arrive_wts[i] += arrive_wt[i]
             self.mansion.generate_person()
             # self.render()
             # time.sleep(0.05)
@@ -323,19 +322,35 @@ class SmecRLEnv(gym.Env):
             next_call_come = unallocated_up != [] or unallocated_dn != []
 
             # cal reward
-            factor = 0.6
+            factor = 0
             reward += 0.1 * (-np.array(hall_waiting_rewards) - factor * np.array(car_waiting_rewards))
 
         # TODO: calculate reward, during the time interval between two person, finish how many person?
         finish_time = self._config.raw_time
         delta_t = finish_time - cur_time
         reward = reward * self._config._delta_t / delta_t
-        info = {'waiting_time': concate_list(arrive_wt), 'sum_wait_rew': 0, 'sum_io_rew': 0,
+        info = {'waiting_time': concate_list(arrive_wts), 'sum_wait_rew': 0, 'sum_io_rew': 0,
                 'sum_enter_rew': 0, 'awt': awt}
         new_obs = self.get_smec_state()
         self.mansion.generate_person()
         done = self.mansion.is_done
-        return new_obs, reward, done, info
+
+        # TODO: tune the reward
+        if not done:
+            new_reward = np.zeros_like(reward)
+        else:
+            p_waiting_time = []
+            p_transmit_time = []
+            for k in self.mansion.person_info.keys():
+                pinfo = self.mansion.person_info[k]
+                p_waiting_time.append(pinfo[2])
+                p_transmit_time.append(pinfo[4])
+            p_awt = np.mean(p_waiting_time)
+            p_att = np.mean(p_transmit_time)
+            new_reward = np.ones_like(reward) * (-p_awt) / 60
+
+        # return new_obs, reward, done, info
+        return new_obs, new_reward, done, info
 
     # Implement by JY, just to simply compare with the RL agent
     def step_shortest_elev(self, random_policy=False, use_rules=True):

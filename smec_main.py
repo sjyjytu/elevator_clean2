@@ -56,6 +56,7 @@ def main():
     parser.add_argument('--data-dir', type=str, default=None, help='use the files in a data dir to train.')
     parser.add_argument('--model-path', type=str, default=None, help='the load model path')
     parser.add_argument('--device', type=str, default='cpu', help='the device')
+    parser.add_argument('--dos', type=str, default='', help='data of section')
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     args.graph = not args.no_graph
@@ -86,10 +87,11 @@ def main():
         # build env
         eval_env = None
         test_env = make_env(seed=0, forbid_uncalled=args.forbid_uncalled, use_graph=args.graph, gamma=args.gamma,
-                            real_data=args.real_data, use_advice=args.use_advice)()
+                            # real_data=args.real_data, use_advice=args.use_advice)()
+                            real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, dos=args.dos)()
         env_num, elevator_num, floor_num = args.num_envs, test_env.elevator_num, test_env.floor_num
         envs = [make_env(seed=i+1000, forbid_uncalled=args.forbid_uncalled, use_graph=args.graph, gamma=args.gamma,
-                         real_data=args.real_data, use_advice=args.use_advice, special_reward=args.special_reward, data_dir=args.data_dir, file_begin_idx=i) for i in range(env_num)]
+                         real_data=args.real_data, use_advice=args.use_advice, special_reward=args.special_reward, data_dir=args.data_dir, file_begin_idx=i, dos=args.dos) for i in range(env_num)]
         envs = AsyncVectorEnv(env_fns=envs)
 
         # build model
@@ -97,6 +99,7 @@ def main():
         actor_critic.to(device)
         # actor_critic = torch.load(os.path.join(log_dir, args.exp_name + ".pt"), map_location=device)[0]
         if args.model_path:
+            print(f'loading model from {args.model_path}')
             actor_critic = torch.load(args.model_path, map_location=device)[0]
 
 
@@ -123,6 +126,7 @@ def main():
 
         episode_rewards = deque(maxlen=100)
         episode_waiting_t = deque(maxlen=100)
+        episode_energy = deque(maxlen=100)
         start = time.time()
         num_updates = int(args.num_env_steps) // args.num_steps // env_num
         best_score = 100000000
@@ -141,14 +145,20 @@ def main():
                 with torch.no_grad():
                     value, action, action_log_prob, rule = actor_critic.act(rollouts.obs[step])
 
+                # for debug:
+                rule = j * torch.ones_like(rule)
+
                 # Obser reward and next obs
                 action, action_log_prob, value = action.squeeze(0), action_log_prob.squeeze(0), value.squeeze(0)
                 # step the same action for a few step.
                 for rd in range(args.react_delay):
-                    # actions = torch.cat((action.cpu(), rule.cpu()), dim=1)
-                    # for debug:
-                    actions = torch.cat((action.unsqueeze(0).cpu(), rule.cpu()), dim=1)
+                    if env_num != 1:
+                        actions = torch.cat((action.cpu(), rule.cpu()), dim=1)
+                    else:
+                        # for debug or num_env == 1:
+                        actions = torch.cat((action.unsqueeze(0).cpu(), rule.cpu()), dim=1)
                     obs, reward, done, info = envs.step(actions)
+                    # print(f'step {step} done:{done}')
                     # print("reward: ", reward[0][0])
 
                 # if sum(done) > 0:
@@ -162,6 +172,8 @@ def main():
                 for inf in info:
                     if inf['waiting_time']:
                         episode_waiting_t += inf['waiting_time']
+                    if inf['total_energy']:
+                        episode_energy += [inf['total_energy']]
                 reward, masks = torch.tensor(reward), torch.tensor(masks)
                 rollouts.insert(obs, action, action_log_prob, value, reward, masks)
                 rollouts.to(device)
@@ -181,14 +193,16 @@ def main():
             if j % args.log_interval == 0 and len(episode_rewards) > 1:
                 total_num_steps = (j + 1) * args.num_steps * args.num_envs
                 end = time.time()
-                print(f"[train] Updates {j}, num timesteps {total_num_steps}, FPS {int(total_num_steps / (end - start))}; training waiting time: {np.mean(episode_waiting_t):.1f}.")
+                print(f"[train] Updates {j}, num timesteps {total_num_steps}, FPS {int(total_num_steps / (end - start))};"
+                      f" training waiting time: {np.mean(episode_waiting_t):.1f} training energy: {np.mean(episode_energy):.1f}.")
                 # print(episode_waiting_t)
                 print(f"[train] Max reward {np.max(episode_rewards):.3f}, min reward: {np.min(episode_rewards):.3f}, Mean reward: {np.mean(episode_rewards):.3f}.")
                 print(f"[train] Best val waiting time: {best_score:.1f}, Value loss: {value_loss:.5f}, action loss: {action_loss:.5f}, dist entropy: {dist_entropy:.5f}.")
 
                 if save_log_by_hand:
                     print(
-                        f"[train] Updates {j}, num timesteps {total_num_steps}, FPS {int(total_num_steps / (end - start))}; training waiting time: {np.mean(episode_waiting_t):.1f}.", file=log_file, flush=True)
+                        f"[train] Updates {j}, num timesteps {total_num_steps}, FPS {int(total_num_steps / (end - start))};"
+                        f" training waiting time: {np.mean(episode_waiting_t):.1f} training energy: {np.mean(episode_energy):.1f}.", file=log_file, flush=True)
                     print(
                         f"[train] Max reward {np.max(episode_rewards):.3f}, min reward: {np.min(episode_rewards):.3f}, Mean reward: {np.mean(episode_rewards):.3f}.", file=log_file, flush=True)
                     print(
@@ -196,15 +210,20 @@ def main():
 
             if args.eval_interval is not None and (j+1) % args.eval_interval == 0:
                 if eval_env is None:
-                    eval_env = make_env(seed=0, render=False, forbid_uncalled=args.forbid_uncalled, gamma=args.gamma, real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir)()
+                    eval_env = make_env(seed=0, render=False, forbid_uncalled=args.forbid_uncalled, gamma=args.gamma,
+                                        real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, dos=args.dos)()
                 res = 0
+                total_energy = 0
                 for i in range(args.test_num):
                     evaluate_args = {'actor_critic': actor_critic}
-                    res += evaluate_general(eval_env, device, "rl", evaluate_args)
+                    r, e = evaluate_general(eval_env, device, "rl", evaluate_args)
+                    res += r
+                    total_energy += e
                 res /= args.test_num
-                print(f"[Evaluation] Curr mean val waiting time: {res:.1f}")
+                total_energy /= args.test_num
+                print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}")
                 if save_log_by_hand:
-                    print(f"[Evaluation] Curr mean val waiting time: {res:.1f}", file=log_file, flush=True)
+                    print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}", file=log_file, flush=True)
                 # res = evaluate(actor_critic, eval_env, device)
                 # print(f"[train] Curr val waiting time: {res:.1f}")
                 if res < best_score:
@@ -232,21 +251,27 @@ def main():
         evaluate_args = {'use_rules': args.use_rules}
         if args.evaluate_method == 'rl':
             model_path = os.path.join(log_dir, args.exp_name + ".pt")
-            # actor_critic = torch.load(model_path, map_location=device)[0]
-            actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
-            actor_critic.open_mask = False
+            actor_critic = torch.load(model_path, map_location=device)[0]
+            # actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
+            # actor_critic.open_mask = False
             evaluate_args['actor_critic'] = actor_critic
             print('mask: ', actor_critic.open_mask)
 
         test_env = make_env(seed=args.seed, render=args.render, use_graph=args.graph, gamma=args.gamma,
-                            real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, file_begin_idx=17)()
+                            real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, file_begin_idx=17, dos=args.dos)()
         if args.data_dir:
-            for i in range(31):
-                res = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
-                print("finish evaluation. res score:", res)
+            test_num = 100
+            total_res = 0
+            total_energies = 0
+            for i in range(test_num):
+                res, total_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
+                print(f"finish evaluation. res score: {res}, total_energy: {total_energy}")
+                total_res += res
+                total_energies += total_energy
+            print(f'average time: {total_res / test_num:.2f} average energy: {total_energies / test_num:.2f}')
         else:
-            res = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
-            print("finish evaluation. res score:", res)
+            res, total_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
+            print(f"finish evaluation. res score: {res}, total_energy: {total_energy}")
 
 
 if __name__ == '__main__':

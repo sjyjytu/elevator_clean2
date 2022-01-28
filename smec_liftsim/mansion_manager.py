@@ -130,16 +130,29 @@ class MansionManager(object):
         return upload_wait_nums, download_wait_nums, elevator_loading_maps, elevator_location_maps, \
                elevator_up_calls, elevator_down_calls, elv_load_up, elv_load_down
 
+    def is_overload(self, elev, src, dst):
+        loaded_person = elev._loaded_person
+        cur_load_num = elev._load_weight // 75
+        for i in range(max(0,src), min(dst+1, self._floor_number)):
+            cur_load_num -= len(loaded_person[i])
+        if cur_load_num < 10:
+            return False
+        return True
+
     def get_convenience_elevators(self, up_or_down, floor_id, include_uncalled=True):  # implemented by Zelin
         convenient_elevators = []
         if up_or_down:  # moving up
             for idx, elev in enumerate(self._elevators):
                 if elev._service_direction == 1 and elev._sync_floor < floor_id:
-                    convenient_elevators.append(idx)
+                    # check if over load
+                    if not self.is_overload(elev, elev.cal_cur_next_floor(), floor_id):
+                        convenient_elevators.append(idx)
         else:
             for idx, elev in enumerate(self._elevators):
-                if elev._service_direction != 1 and elev._sync_floor > floor_id:
-                    convenient_elevators.append(idx)
+                if elev._service_direction == -1 and elev._sync_floor > floor_id:
+                    # check if over load
+                    if not self.is_overload(elev, floor_id, elev.cal_cur_next_floor()):
+                        convenient_elevators.append(idx)
         if include_uncalled:
             uncalled = self.get_uncalled_elevators()
             for elev in uncalled:
@@ -180,7 +193,14 @@ class MansionManager(object):
     #                 dn_called_floors.remove(allocated_dn)
     #     return up_called_floors, dn_called_floors
 
-    def get_unallocated_floors(self):  # implemented by Jy
+    # def get_load_weight_mask(self):
+    #     mask = [[1 for j in range(self._floor_number * 2)] for i in range(self._elevator_number)]
+    #     for i in range(self._elevator_number):
+    #         srv_dir = self._elevators[i]._service_direction
+    #         loaded_person = self._elevators[i]._loaded_person
+    #         if self._elevators[i]._ser
+
+    def get_unallocated_floors_v1(self):  # implemented by Jy
         allow_reallocation = False
         # if the floor is allocated to a car but the car is still not on the way, we allow to reallocate it.
         up_called_floors = []
@@ -219,6 +239,62 @@ class MansionManager(object):
                         self.evaluate_info['reallocate_dn'] += 1
                         elev._hall_dn_call.remove(allocated_dn)
         return up_called_floors, dn_called_floors
+
+    def get_unallocated_floors_v2(self):  # implemented by Jy
+        allow_reallocation = True
+        # if the floor is allocated to a car but the car is still not on the way, we allow to reallocate it.
+        up_called_floors = []
+        for idx, floor_up in enumerate(self._wait_upward_persons_queue):
+            # 给人赋予意志，如果电梯装不下了，应该等当前满载电梯走了之后再按电梯
+            if len(floor_up) > 0:
+            # if len(floor_up) > 0 and self.not_in_hallcall_but_serving_by[idx] == -1:  # added by JY
+                up_called_floors.append(idx)
+
+        for idx, elev in enumerate(self._elevators):  # remove allocated
+            cur_up_call = elev._hall_up_call
+            for allocated_up in cur_up_call:
+                # is_serving = not (elev._service_direction == 1 and elev._sync_floor > allocated_up)
+                # is_serving = (elev._service_direction == 1 and elev._sync_floor <= allocated_up) or\
+                #              (elev._service_direction == -1 and elev._target_floor == allocated_up)
+                is_serving = elev._target_floor == allocated_up
+                nf = elev.cal_cur_next_floor()
+                is_overload = self.is_overload(elev, min(nf, allocated_up), max(nf, allocated_up))
+
+                if allocated_up in up_called_floors:
+                    # do not allocate this floor
+                    if (is_serving or not allow_reallocation) and not is_overload:
+                        up_called_floors.remove(allocated_up)
+                    # if allocated but not convenient or going to serve it or is overload, allow reallocation.
+                    else:
+                        self.evaluate_info['reallocate_up'] += 1
+                        elev._hall_up_call.remove(allocated_up)  # reset and reallocate later.
+
+        dn_called_floors = []
+        for idx, floor_dn in enumerate(self._wait_downward_persons_queue):
+            if len(floor_dn) > 0:
+            # if len(floor_dn) > 0 and self.not_in_hallcall_but_serving_by[idx+self._floor_number] == -1:
+                dn_called_floors.append(idx)
+
+        for idx, elev in enumerate(self._elevators):  # remove allocated
+            cur_dn_call = elev._hall_dn_call
+            for allocated_dn in cur_dn_call:
+                # is_serving = not (elev._service_direction == -1 and elev._sync_floor < allocated_dn)
+                # is_serving = (elev._service_direction == -1 and elev._sync_floor >= allocated_dn) or (
+                #             elev._service_direction == 1 and elev._target_floor == allocated_dn)
+                is_serving = elev._target_floor == allocated_dn
+                nf = elev.cal_cur_next_floor()
+                is_overload = self.is_overload(elev, min(nf, allocated_dn), max(nf, allocated_dn))
+                if allocated_dn in dn_called_floors:
+                    if (is_serving or not allow_reallocation) and not is_overload:
+                        dn_called_floors.remove(allocated_dn)
+                    else:
+                        self.evaluate_info['reallocate_dn'] += 1
+                        elev._hall_dn_call.remove(allocated_dn)
+        return up_called_floors, dn_called_floors
+
+    def get_unallocated_floors(self):  # implemented by Jy
+        # return self.get_unallocated_floors_v1()
+        return self.get_unallocated_floors_v2()
 
     def get_unallocated_floors_mask(self):
         unallocated_masks = [0 for _ in range(2 * self._floor_number)]
@@ -506,9 +582,9 @@ class MansionManager(object):
                     car_waiting_rewards[dn_floor + self._floor_number] += cur_elev_reward
 
             return calling_wt, all_people_waiting_time, loaded_person_num, all_enter_person_num, no_io_masks, awt, \
-                   hall_waiting_rewards, car_waiting_rewards
+                   hall_waiting_rewards, car_waiting_rewards, cumulative_energy_consumption
 
-        return calling_wt, all_people_waiting_time, loaded_person_num, all_enter_person_num, no_io_masks, awt
+        return calling_wt, all_people_waiting_time, loaded_person_num, all_enter_person_num, no_io_masks, awt, cumulative_energy_consumption
 
     @property
     def up_served_call(self):  # added by Zelin

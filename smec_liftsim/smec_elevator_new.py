@@ -664,6 +664,25 @@ class SmecElevator(object):
         if button >= 0 and button < self._number_of_floors and button not in self._car_call:
             self._car_call.append(button)
 
+    def cal_cur_last_floor(self):
+        if self._current_velocity != 0:
+            flr = self._current_position // self._floor_height
+            if self._run_direction == -1:
+                flr += 1
+        else:
+            flr = self._current_position // self._floor_height
+        return int(flr)
+
+    def cal_cur_next_floor(self):
+        if self._current_velocity != 0:
+            flr = self._current_position // self._floor_height
+            if self._run_direction == 1:
+                flr += 1
+        else:
+            flr = self._current_position // self._floor_height
+        return int(flr)
+
+
     # below is control calc
     def get_floor_position(self, flr):
         return flr * self._floor_height

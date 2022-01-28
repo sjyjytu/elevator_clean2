@@ -19,8 +19,10 @@
 # exp_name = 'dec06_lanuchpeak00-10_31days_openmask'
 # exp_name = 'dec06_lanuchpeak00-60_31days_openmask'
 # exp_name = 'dec07_lanuchpeak00-10_31days_openmask'
-exp_name = 'jan07_simplev2'
+# exp_name = 'jan07_simplev2'
 # exp_name = 'jan07_simplev2_nomask'
+exp_name = 'jan14_lunch_random0-6'
+# exp_name = 'jan14_lunch_random0-6_nomask'
 mean_interval = 20
 
 # copy log
@@ -111,7 +113,7 @@ with open('draw_tmp_log', 'r') as f:
     plt.title('评测时间与迭代次数的关系')
     plt.plot(test_accs, color='blue')
     # plt.plot(test_accs[:length], color='blue')
-    plt.plot(mean_test_accs, color='red')
+    # plt.plot(mean_test_accs, color='red')
     plt.grid(True)
     plt.xlabel('iteration')
     plt.ylabel('evaluation time')
@@ -166,9 +168,12 @@ mean_mean_rewards = []
 for i in range(len(mean_rewards)):
     mean_mean_rewards.append(np.mean(mean_rewards[max(i-(mean_interval-1), 0):i+1]))
     # mean_mean_rewards.append(np.mean(mean_rewards[0:2+i]))
-
-plt.plot(mean_rewards[0:], color='blue')
-plt.plot(mean_mean_rewards, color='red')
+another_rewards = []
+for i in range(0, len(mean_rewards), 10):
+    another_rewards.append(np.mean(mean_rewards[i:i+100]))
+plt.plot(another_rewards, color='blue')
+# plt.plot(mean_rewards, color='blue')
+# plt.plot(mean_mean_rewards, color='red')
 plt.legend()
 plt.grid(True)
 # plt.xlabel('iteration')

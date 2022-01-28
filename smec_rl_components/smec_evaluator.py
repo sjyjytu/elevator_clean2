@@ -9,6 +9,7 @@ def evaluate_general(eval_env, device, method, args, verbose=False):
     for k in obs:
         obs[k] = obs[k].to(device).unsqueeze(0)
     dt = eval_env._config._delta_t
+    total_energy = 0
     for time_step in range(int((3600 + 60) / dt)):
         # debug
         # if True and time_step > (865 / dt):
@@ -22,7 +23,7 @@ def evaluate_general(eval_env, device, method, args, verbose=False):
             actions = torch.cat((action.cpu(), rule.cpu()), dim=1)
             actions = actions.squeeze(0)
             # print(actions[0][0])
-            obs, _, done, _ = eval_env.step(actions)
+            obs, _, done, info = eval_env.step(actions)
         elif method == 'shortest':
             obs, _, done, _ = eval_env.step_shortest_elev(random_policy=False, use_rules=args["use_rules"])
         elif method == 'smec':
@@ -37,6 +38,8 @@ def evaluate_general(eval_env, device, method, args, verbose=False):
 
         for k in obs:
             obs[k] = obs[k].to(device).unsqueeze(0)
+
+        total_energy += info['total_energy']
 
         if done:
             break
@@ -56,9 +59,11 @@ def evaluate_general(eval_env, device, method, args, verbose=False):
     eval_env.close()
     print(
         f"-------------------------------------------------evaluation result-------------------------------------------------")
+    awt = np.mean(waiting_time)
+    att = np.mean(transmit_time)
     print(
-        f"[Evaluation] for {len(waiting_time)} people: mean waiting time {np.mean(waiting_time):.1f}, mean transmit time: {np.mean(transmit_time):.1f}.")
-    return np.mean(waiting_time) + np.mean(transmit_time)
+        f"[Evaluation] for {len(waiting_time)} people: mean waiting time {awt:.1f}, mean transmit time: {att:.1f}.")
+    return awt + att, total_energy
 
 
 def evaluate(actor_critic, eval_env, device, verbose=False):

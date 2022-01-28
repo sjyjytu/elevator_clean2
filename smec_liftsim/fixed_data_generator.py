@@ -8,7 +8,7 @@ from smec_liftsim.utils import PersonType
 from smec_liftsim.mansion_configs import MansionConfig
 from smec_liftsim.person_generators import PersonGeneratorBase
 
-from offline_tools.generate_dataset import generate_dataset_from_csv_to_pipline
+from offline_tools.generate_dataset import *
 import numpy as np
 
 

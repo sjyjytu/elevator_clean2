@@ -152,6 +152,41 @@ def generate_dataset_from_csv_to_txt(data_file, data_of_section='', save_txt='')
                     break
 
 
+def generate_dataset_from_prob_to_pipline(generate_mask, data_of_section=''):
+
+    if data_of_section != '':
+        # '10:00-11:00'
+        s, e = data_of_section.split('-')
+        sm, ss = s.split(':')
+        em, es = e.split(':')
+        section_start = int(sm) * 60 + int(ss)
+        section_end = int(em) * 60 + int(es)
+        t_range = range(section_start, section_end)
+    else:
+        t_range = range(generate_mask.shape[0])
+
+    collected_data = MyQueue()
+    for t in t_range:
+        for s in range(generate_mask.shape[1]):
+            for d in range(generate_mask.shape[2]):
+                if generate_mask[t][s][d]:
+                    collected_data.put({'appear_time': t, 'start_level': s+1, 'end_level': d+1, 'm': 75, 'standard_ele': -1})
+    return collected_data
+
+
+def save_dataset(data, file):
+    out_put = open(file, 'wb')
+    data_str = pickle.dumps(data)
+    out_put.write(data_str)
+    out_put.close()
+
+
+def load_dataset(file):
+    with open(file, 'rb') as file:
+        data = pickle.loads(file.read())
+    return data
+
+
 if __name__ == '__main__':
     # generate_dataset()
     # a = generate_dataset_from_csv_to_pipline('../train_data/up_peak_normal/4Ele16FloorUpPeakFlow28_elvx.csv', data_of_section='20:00-30:00')

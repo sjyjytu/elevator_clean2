@@ -124,6 +124,7 @@ def draw_whole():
     fileid = 0
     # dataX = dataX[fileid]  # 指定文件
     dataX = np.average(dataX, axis=0)  # 均值
+    print(dataX)
     # z = np.sum(z, axis=0)  # 查看总人数
     for t in range(dataX.shape[0]):
         z = dataX[t]
@@ -230,7 +231,10 @@ def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
     # print(start_sum)
     # print(end_sum)
 
-# draw_whole()
+
+if __name__ == '__main__':
+
+    draw_whole()
 # draw_one()
 # for i in range(4):
 #     upcalls, dncalls, carcalls = print_hallcall_along_time(i)
@@ -242,4 +246,4 @@ def print_flow_map(data_dir_prefix='./train_data/new/', data_idx=2, fileid=0):
 # res = np.load('16floor_weights.npy')
 # print(res)
 
-print_flow_map()
+# print_flow_map()

@@ -49,7 +49,8 @@ import time
 
 
 class SmecEnv:
-    def __init__(self, data_file='smec_rl/simple_dataset_v2.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
+    def __init__(self, data_file='smec_rl/simple_dataset.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
+    # def __init__(self, data_file='smec_rl/simple_dataset_v2.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/lunchpeak/LunchPeak1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/uppeak/UpPeakFlow1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
     # def __init__(self, data_file='train_data/new/dnpeak/DnPeakFlow1_elvx.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
@@ -679,7 +680,7 @@ class LocalSearch:
                 to_serve_calls.append(dc + self.floor_num)
         return dispatch, to_serve_calls
 
-    def eploit_exhaust(self, to_serve_calls):
+    def exploit_exhaust(self, to_serve_calls):
         solution_space = self.elev_num ** len(to_serve_calls)
         for i in range(solution_space):
             dispatch = [-1 for _ in range(self.floor_num * 2)]
@@ -842,8 +843,8 @@ if __name__ == '__main__':
         print(f'execute action: {action}')
         elev_env.step(action)
 
-    # print(elev_env.person_info)
-    print(elev_env.get_reward())  # (0.35, 3.8)
+    awt, att = elev_env.get_reward()
+    print(f'{awt:.2f} {att:.2f} {awt + att:.2f}')
 
 
 

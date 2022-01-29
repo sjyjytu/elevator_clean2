@@ -143,6 +143,7 @@ class MansionManager(object):
         convenient_elevators = []
         if up_or_down:  # moving up
             for idx, elev in enumerate(self._elevators):
+                # 要多考虑电梯停不停得下来
                 if elev._service_direction == 1 and elev._sync_floor < floor_id:
                     # check if over load
                     if not self.is_overload(elev, elev.cal_cur_next_floor(), floor_id):

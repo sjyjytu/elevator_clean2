@@ -284,7 +284,7 @@ class SmecRLEnv(gym.Env):
 
         # for debug:
         j = advantage_floor.item()
-        if j > 204:
+        if j > 200:
             DEBUG = True
         else:
             DEBUG = False

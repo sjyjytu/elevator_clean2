@@ -161,6 +161,35 @@ class SmecElevator(object):
                 self.arrive_info.append(('c' + str(self._sync_floor),
                                          time_cnt.get_time(self._config._delta_t)))
 
+    def cal_cur_last_floor(self):
+        if abs(self._current_velocity) > EPSILON:
+            flr = self._current_position // self._floor_height
+            if self._run_direction == -1:
+                flr += 1
+        else:
+            flr = self._current_position // self._floor_height
+        return int(flr)
+
+    def cal_cur_next_floor(self):
+        if abs(self._current_velocity) > EPSILON:
+            flr = self._current_position // self._floor_height
+            if self._run_direction == 1:
+                flr += 1
+        else:
+            flr = self._current_position // self._floor_height
+        return int(flr)
+
+    def get_next_stop_floor(self):
+        cur_pos = self._current_position
+        cur_vel = self._current_velocity
+        max_a = select_max_acc(self._delta_floor * self._floor_height)
+        min_s = cur_vel ** 2 / (2 * max_a)
+        stop_pos = cur_pos + self._service_direction * min_s
+        flr = int(stop_pos // self._floor_height)
+        if self._service_direction == 1 and stop_pos - flr * self._floor_height > EPSILON:
+            flr += 1
+        return flr
+
     def run_elevator(self, with_bug=False, time_cnt=None):
         """
         run elevator for one step, simulate as smec elevator
@@ -177,10 +206,13 @@ class SmecElevator(object):
         car_call = change_list_to_qtype_floor(self._car_call, self._number_of_floors)
 
         if self._park_call != -1:
+            # print(self._park_call)
             car_call[self._park_call] = 1
 
         current_floor = self.calc_sync_floor(self._current_position)
-        advance_floor = self.calc_advance_floor(self._current_position, self._current_velocity)
+        # advance_floor = self.calc_advance_floor(self._current_position, self._current_velocity)
+        advance_floor = self.get_next_stop_floor()
+        # print('advance:', advance_floor, self._current_position, self._current_velocity)
         movestate = (self._run_state == ELEVATOR_RUN)
         doorclose = (self._door_open_rate < EPSILON)
         srv_dir = self.service_direction_update(self._service_direction, self._run_direction, movestate, advance_floor,
@@ -225,6 +257,8 @@ class SmecElevator(object):
         # update the elevator velocity
         self._current_velocity = tmp_velocity
 
+        # target_floor = self.go_floor_update(self._service_direction, advance_floor, up_call, dn_call, car_call)
+        # advance_floor 应该改为下一个能停的层
         target_floor = self.go_floor_update(self._service_direction, advance_floor, up_call, dn_call, car_call)
 
         if self._run_state == ELEVATOR_STOP_DOOR_CLOSE:
@@ -264,6 +298,7 @@ class SmecElevator(object):
                 else:
                     # added by JY, a trick for reallocation and stop suddenly while running
                     self._park_call = self._advance_floor
+                    # print('trick:', self._park_call)
 
         elif self._run_state == ELEVATOR_STOP_DOOR_OPENING:
             self._current_position = self.get_floor_position(self._sync_floor)
@@ -663,25 +698,6 @@ class SmecElevator(object):
         """
         if button >= 0 and button < self._number_of_floors and button not in self._car_call:
             self._car_call.append(button)
-
-    def cal_cur_last_floor(self):
-        if self._current_velocity != 0:
-            flr = self._current_position // self._floor_height
-            if self._run_direction == -1:
-                flr += 1
-        else:
-            flr = self._current_position // self._floor_height
-        return int(flr)
-
-    def cal_cur_next_floor(self):
-        if self._current_velocity != 0:
-            flr = self._current_position // self._floor_height
-            if self._run_direction == 1:
-                flr += 1
-        else:
-            flr = self._current_position // self._floor_height
-        return int(flr)
-
 
     # below is control calc
     def get_floor_position(self, flr):

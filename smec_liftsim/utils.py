@@ -136,17 +136,28 @@ def args_to_string(string, args):
         return string % tuple(args)
 
 
+# def select_max_acc(dist):
+#     if dist >= 12.0 - 100*EPSILON:
+#         acc = 0.6369
+#     elif dist >= 9.0 - 100*EPSILON:
+#         acc = 0.6305
+#     elif dist >= 6.0 - 100*EPSILON:
+#         acc = 0.5976
+#     else:
+#         acc = 0.5305
+#
+#     return acc*1.05   # coff from test
 def select_max_acc(dist):
     if dist >= 12.0 - 100*EPSILON:
-        acc = 0.6369
+        acc = 0.668745
     elif dist >= 9.0 - 100*EPSILON:
-        acc = 0.6305
+        acc = 0.662025
     elif dist >= 6.0 - 100*EPSILON:
-        acc = 0.5976
+        acc = 0.62748
     else:
-        acc = 0.5305
+        acc = 0.557025
 
-    return acc*1.05   # coff from test
+    return acc
 
 
 def velocity_planner(start_v, target_x, max_acc, max_spd, dt):

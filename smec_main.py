@@ -1,7 +1,6 @@
 from collections import deque
 from smec_rl_components.smec_rollout_storage import SmecRolloutStorage
 from smec_liftsim.smec_rl_env import *
-from smec_rl_components.smec_policy import *
 
 from smec_rl_components.smec_evaluator import evaluate, evaluate_shortest_first, evaluate_smec, evaluate_general
 from smec_rl_components.smec_reward import concate_list
@@ -40,6 +39,7 @@ def main():
     parser.add_argument('--no-cuda', action='store_true', default=False, help='disables CUDA training')
     parser.add_argument('--no-graph', action='store_true', default=False, help='disables gnn in training')
     parser.add_argument('--no-mask', action='store_true', default=False, help='disables action mask in training')
+    parser.add_argument('--use-attention', action='store_true', default=False, help='use attention mask for mask')
     parser.add_argument('--use-proper-time-limits', action='store_true', default=False, help='compute returns taking into account time limits')
     parser.add_argument('--recurrent-policy', action='store_true', default=False, help='use a recurrent policy')
     parser.add_argument('--use-linear-lr-decay', action='store_true', default=False, help='use a linear schedule on the learning rate')
@@ -58,6 +58,12 @@ def main():
     parser.add_argument('--device', type=str, default='cpu', help='the device')
     parser.add_argument('--dos', type=str, default='', help='data of section')
     args = parser.parse_args()
+
+    if args.use_attention:
+        from smec_rl_components.smec_policy2 import SmecPolicy
+    else:
+        from smec_rl_components.smec_policy import SmecPolicy
+
     args.cuda = not args.no_cuda and torch.cuda.is_available()
     args.graph = not args.no_graph
     assert args.algo in ['a2c', 'ppo', 'acktr']
@@ -95,7 +101,8 @@ def main():
         envs = AsyncVectorEnv(env_fns=envs)
 
         # build model
-        actor_critic = SmecPolicy(elevator_num, floor_num, open_mask=not args.no_mask, use_advice=args.use_advice)
+        # actor_critic = SmecPolicy(elevator_num, floor_num, open_mask=not args.no_mask, use_advice=args.use_advice)
+        actor_critic = SmecPolicy(elevator_num, floor_num, open_mask=not args.no_mask, use_advice=args.use_advice, device=device)
         actor_critic.to(device)
         # actor_critic = torch.load(os.path.join(log_dir, args.exp_name + ".pt"), map_location=device)[0]
         if args.model_path:
@@ -252,6 +259,7 @@ def main():
         if args.evaluate_method == 'rl':
             model_path = os.path.join(log_dir, args.exp_name + ".pt")
             actor_critic = torch.load(model_path, map_location=device)[0]
+            print(actor_critic.AttentionFactor)
             # actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
             # actor_critic.open_mask = False
             evaluate_args['actor_critic'] = actor_critic
@@ -260,7 +268,7 @@ def main():
         test_env = make_env(seed=args.seed, render=args.render, use_graph=args.graph, gamma=args.gamma,
                             real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, file_begin_idx=17, dos=args.dos)()
         if args.data_dir:
-            test_num = 100
+            test_num = 20
             total_res = 0
             total_energies = 0
             for i in range(test_num):

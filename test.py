@@ -60,5 +60,42 @@
 # print(cal_cur_next_floor(a))
 
 
-for i in range(10, 1):
-    print(i)
+# for i in range(10, 1):
+#     print(i)
+
+# import torch
+#
+# a = torch.arange(0, 24)
+# a = a.view((2,3,4))
+# print(a)
+# a = a.permute(0,2,1).contiguous()
+# print(a)
+
+import torch
+from torch import nn
+from torchviz import make_dot, make_dot_from_trace
+
+# Visualize gradients of simple MLP
+# The method below is for building directed graphs of PyTorch operations, built during forward propagation and showing which operations will be called on backward. It omits subgraphs which do not require gradients.
+
+# model=nn.Sequential()
+# model.add_module("W0", nn.Linear(8, 16))
+# model.add_module("tanh", nn.Tanh())
+# model.add_module("W1", nn.Linear(16, 1))
+#
+# x = torch.randn(1, 8)
+# y = model(x)
+#
+# make_dot(y.mean(), params=dict(model.named_parameters()))  # 直接在ipython notebook中显示
+#
+# dot=make_dot(y.mean(), params=dict(model.named_parameters()))
+# dot.render("model.pdf")  #保存为pdf
+
+import numpy as np
+a = np.arange(0, 50)
+b = np.exp(-a / 20) + 1
+import matplotlib.pyplot as plt
+plt.figure()
+plt.plot(b)
+plt.show()
+print(b)

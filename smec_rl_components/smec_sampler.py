@@ -60,3 +60,23 @@ class SmecSampler(nn.Module):
                 regularized_logits = x
             dist = FixedCategorical(logits=regularized_logits)
         return dist
+
+
+class SmecSampler2(nn.Module):
+    def __init__(self, num_inputs, num_outputs, use_graph=True):
+        super(SmecSampler2, self).__init__()
+        self.use_graph = use_graph
+        init_ = lambda m: init(
+            m,
+            nn.init.orthogonal_,
+            lambda x: nn.init.constant_(x, 0),
+            gain=0.01)
+
+        self.linear = init_(nn.Linear(num_inputs, num_outputs))
+
+    def forward(self, action_feature, convenience_factor=None):
+        x = self.linear(action_feature)
+        if convenience_factor is not None:
+            x = x + torch.log(convenience_factor)
+        dist = FixedCategorical(logits=x)
+        return dist

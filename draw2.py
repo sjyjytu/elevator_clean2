@@ -84,8 +84,9 @@ for i, test_acc in enumerate(test_accs):
     # plt.plot(test_acc, label=exp_names[i], color=COLORS[i])
     # if i != 1:
         new_test_acc= [np.mean(test_acc[max(i - (mean_interval - 1), 0):i + 1]) for i in range(len(test_acc))]
-        plt.plot(test_acc, color=COLORS[i], alpha=0.3)
-        plt.plot(new_test_acc, label=legend_names[i], color=COLORS[i])
+        xs = np.arange(0, len(test_acc)*2048, 2048)
+        plt.plot(xs, test_acc, color=COLORS[i], alpha=0.3)
+        plt.plot(xs, new_test_acc, label=legend_names[i], color=COLORS[i])
 plt.grid(True)
 plt.legend()
 plt.xlabel('iteration')
@@ -104,8 +105,9 @@ plt.title('loss vs iteration')
 for i, loss in enumerate(losses):
     # loss = loss[50:4050]
     new_loss = [np.mean(loss[max(i - (mean_interval - 1), 0):i+1]) for i in range(len(loss))]
-    plt.plot(loss, color=COLORS[i], alpha=0.3)
-    plt.plot(new_loss, label=legend_names[i], color=COLORS[i])
+    xs = np.arange(0, len(loss) * 2048, 2048)
+    plt.plot(xs, loss, color=COLORS[i], alpha=0.3)
+    plt.plot(xs, new_loss, label=legend_names[i], color=COLORS[i])
     # plt.plot(test_accs[:length], color='blue')
 plt.grid(True)
 plt.legend()
@@ -125,7 +127,7 @@ plt.title('reward vs iteration')
 for i, reward in enumerate(rewards):
     # reward = reward[:1000]
     new_reward = [np.mean(reward[i:i+50]) for i in range(len(reward)-50)]
-    plt.plot(reward, color=COLORS[i], alpha=0.3)
+    plt.plot( reward, color=COLORS[i], alpha=0.3)
     plt.plot(new_reward, label=legend_names[i], color=COLORS[i])
     # plt.plot(test_accs[:length], color='blue')
 plt.grid(True)

@@ -29,6 +29,8 @@ class RandomDataGenerator(PersonGeneratorBase):
 
         dataX = process2(data_dir=self.data_dir)  # file, t, s, d
         dataX = np.average(dataX, axis=0)  # 均值 t,s,d  每分钟的人数
+        if self.data_dir.endswith('notpeak') or self.data_dir.endswith('notpeak/'):
+            dataX = dataX / 2
         self.prob = dataX / delta_t  # 每分钟中，每秒的生成人的概率  t,s,d
 
         # generate dataset
@@ -41,9 +43,9 @@ class RandomDataGenerator(PersonGeneratorBase):
         self.data_of_section = data_of_section
         self.data = generate_dataset_from_prob_to_pipline(self.generate_mask, self.data_of_section)
         if self.random_or_load_or_save == 1:
-            self.data = load_dataset(f'./save_datasets/{self.reset_cnt}')
+            self.data = load_dataset(f'{self.data_dir}/save_datasets/{self.reset_cnt}')
         elif self.random_or_load_or_save == 2:
-            save_dataset(self.data, f'./save_datasets/{self.reset_cnt}')
+            save_dataset(self.data, f'{self.data_dir}/save_datasets/{self.reset_cnt}')
         self.total_person_num = self.data.qsize()
         self.next_person = None if self.data.empty() else self.data.get()
         self.done = False
@@ -59,9 +61,9 @@ class RandomDataGenerator(PersonGeneratorBase):
 
         self.data = generate_dataset_from_prob_to_pipline(self.generate_mask, self.data_of_section)
         if self.random_or_load_or_save == 1:
-            self.data = load_dataset(f'./save_datasets/{self.reset_cnt}')
+            self.data = load_dataset(f'{self.data_dir}/save_datasets/{self.reset_cnt}')
         elif self.random_or_load_or_save == 2:
-            save_dataset(self.data, f'./save_datasets/{self.reset_cnt}')
+            save_dataset(self.data, f'{self.data_dir}/save_datasets/{self.reset_cnt}')
 
         self.total_person_num = self.data.qsize()
         self.next_person = None if self.data.empty() else self.data.get()

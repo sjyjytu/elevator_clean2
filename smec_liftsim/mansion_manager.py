@@ -16,10 +16,11 @@ import random
 from collections import deque
 from smec_liftsim.utils import *
 # from smec_liftsim.smec_elevator import SmecElevator
-from smec_liftsim.smec_elevator_new import SmecElevator
+from smec_liftsim.smec_elevator_new2 import SmecElevator
 from smec_liftsim.utils import MansionAttribute, MansionState
 from smec_liftsim.mansion_configs import MansionConfig
 from smec_liftsim.generator_proxy import PersonGenerator
+import numpy as np
 
 
 RUN_ELEVATOR_WITH_BUG = False
@@ -144,13 +145,14 @@ class MansionManager(object):
         if up_or_down:  # moving up
             for idx, elev in enumerate(self._elevators):
                 # 要多考虑电梯停不停得下来
-                if elev._service_direction == 1 and elev._sync_floor < floor_id:
+                # if elev._service_direction == 1 and elev._sync_floor < floor_id:
+                if elev._service_direction == 1 and elev.get_next_stop_floor() <= floor_id:
                     # check if over load
                     if not self.is_overload(elev, elev.cal_cur_next_floor(), floor_id):
                         convenient_elevators.append(idx)
         else:
             for idx, elev in enumerate(self._elevators):
-                if elev._service_direction == -1 and elev._sync_floor > floor_id:
+                if elev._service_direction == -1 and elev.get_next_stop_floor() >= floor_id:
                     # check if over load
                     if not self.is_overload(elev, floor_id, elev.cal_cur_next_floor()):
                         convenient_elevators.append(idx)
@@ -160,6 +162,24 @@ class MansionManager(object):
                 if elev not in convenient_elevators:
                     convenient_elevators.append(elev)
         return convenient_elevators
+
+    def get_convenience_mask(self):
+        convenience_mask = np.ones((self._elevator_number, self._floor_number*2)) * 0.01
+        for idx, elev in enumerate(self._elevators):
+            stop_floor = elev.get_next_stop_floor()
+            next_floor = elev.cal_cur_next_floor()
+            if elev._service_direction == 0:
+                for i in range(self._floor_number*2):
+                    convenience_mask[idx][i] = 1
+            if elev._service_direction == 1:
+                for src in range(stop_floor, self._floor_number):
+                    if not self.is_overload(elev, next_floor, src):
+                        convenience_mask[idx][src] = 1
+            if elev._service_direction == -1:
+                for src in range(0, stop_floor):
+                    if not self.is_overload(elev, src, next_floor):
+                        convenience_mask[idx][src] = 1
+        return convenience_mask
 
     def get_uncalled_elevators(self):  # implemented by Zelin
         not_called_elevators = []
@@ -294,8 +314,8 @@ class MansionManager(object):
         return up_called_floors, dn_called_floors
 
     def get_unallocated_floors(self):  # implemented by Jy
-        # return self.get_unallocated_floors_v1()
-        return self.get_unallocated_floors_v2()
+        return self.get_unallocated_floors_v1()
+        # return self.get_unallocated_floors_v2()
 
     def get_unallocated_floors_mask(self):
         unallocated_masks = [0 for _ in range(2 * self._floor_number)]
@@ -376,13 +396,13 @@ class MansionManager(object):
         #                 # TODO: add an extra loss: the time to go to the predict floor and the time saved for people in a minute
         #
         # elif use_rules:
-        if use_rules:
-            # default rules for up peak mode: just go to the 1st floor.
-            for idx in range(self._elevator_number):
-                elev = self._elevators[idx]
-                if elev.is_idle_stop and elev._sync_floor >= 1:
-                    elev.set_park_call(0)
-                    self.self_trip += 1
+        # if use_rules:
+        #     # default rules for up peak mode: just go to the 1st floor.
+        #     for idx in range(self._elevator_number):
+        #         elev = self._elevators[idx]
+        #         if elev.is_idle_stop and elev._sync_floor >= 1:
+        #             elev.set_park_call(0)
+        #             self.self_trip += 1
                     
 
         # make each elevator run one step

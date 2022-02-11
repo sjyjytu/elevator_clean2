@@ -21,8 +21,14 @@
 # exp_name = 'dec07_lanuchpeak00-10_31days_openmask'
 # exp_name = 'jan07_simplev2'
 # exp_name = 'jan07_simplev2_nomask'
-exp_name = 'jan14_lunch_random0-6'
-# exp_name = 'jan14_lunch_random0-6_nomask'
+# exp_name = 'jan14_lunch_random0-6'
+exp_name = 'jan14_lunch_random0-6_nomask'
+# exp_name = 'jan30_lunch_random0-6_debug'
+# exp_name = 'feb02_down_random6-12'
+# exp_name = 'feb08_down_random6-12_attention'
+# exp_name = 'feb08_lunch_random0-6_attention'
+# exp_name = 'feb08_notpeak_random0-6_attention'
+# exp_name = 'feb08_notpeak_random0-6'
 mean_interval = 20
 
 # copy log
@@ -145,7 +151,7 @@ mean_mean_losses = []
 for i in range(len(mean_losses)):
     mean_mean_losses.append(np.mean(mean_losses[max(i-(mean_interval-1), 0):i+1]))
 
-plt.plot(mean_losses[0:], color='blue')
+plt.plot(mean_losses[50:], color='blue')
 # plt.plot(mean_mean_losses, color='red')
 plt.legend()
 plt.grid(True)

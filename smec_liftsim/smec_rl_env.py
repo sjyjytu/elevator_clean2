@@ -123,6 +123,8 @@ class SmecRLEnv(gym.Env):
             {'adj_m': Box(low=-float('inf'), high=float('inf'), shape=(self.graph_node_num, self.graph_node_num)),
              'node_feature_m': Box(low=-float('inf'), high=float('inf'), shape=(self.graph_node_num, 3)),
              'legal_masks': Box(low=-float('inf'), high=float('inf'), shape=(self.floor_num * 2, candidate_num,)),
+             'elevator_mask': Box(low=-float('inf'), high=float('inf'), shape=(self.elevator_num, self.floor_num * 2,)),
+             'floor_mask': Box(low=-float('inf'), high=float('inf'), shape=(self.floor_num * 2,)),
              'distances': Box(low=-float('inf'), high=float('inf'), shape=(self.floor_num * 2, self.elevator_num,)),
              'valid_action_mask': Box(low=0, high=1, shape=(self.floor_num * 2,))
              })
@@ -188,6 +190,33 @@ class SmecRLEnv(gym.Env):
 
         elevator_mask = torch.stack(floor2elv_masks).to(device)
         return elevator_mask
+
+    def get_action_mask_plus(self, device):
+        # get a list of action candidates by rules given pre-defined floors.
+        unallocated_up, unallocated_dn = self.mansion.get_unallocated_floors()
+
+        data = self.mansion._person_generator.prob[int(self._config.raw_time // 60)]  # 16*16
+        floor_mask = np.zeros(self.floor_num*2)
+        for src in range(self.floor_num):
+            dn = data[src][:src]
+            dn_sum = np.sum(dn)
+            up = data[src][src:]
+            up_sum = np.sum(up)
+
+            floor_mask[src] = up_sum
+            floor_mask[src+self.floor_num] = dn_sum
+        floor_mask = torch.from_numpy(floor_mask)
+
+        # 合并floor_mask 2f x 1
+        for up in unallocated_up:
+            floor_mask[up] += len(self.mansion._wait_upward_persons_queue[up])
+        for dn in unallocated_dn:
+            floor_mask[dn+self.floor_num] += len(self.mansion._wait_downward_persons_queue[dn])
+
+        # 不管这个生成概率，只用当前的方便电梯
+        convenience_mask = self.mansion.get_convenience_mask()  # e x 2f
+        elevator_mask = torch.from_numpy(convenience_mask).to(device)  # e x 2f
+        return elevator_mask, floor_mask
 
     def get_time(self):
         raw_time = self._config.raw_time
@@ -284,7 +313,7 @@ class SmecRLEnv(gym.Env):
 
         # for debug:
         j = advantage_floor.item()
-        if j > 200:
+        if j > 1:
             DEBUG = True
         else:
             DEBUG = False
@@ -335,13 +364,13 @@ class SmecRLEnv(gym.Env):
             # print(unallocated_up, unallocated_dn)
             action_to_execute = [ElevatorHallCall([], []) for _ in range(self.elevator_num)]
             next_call_come = unallocated_up != [] or unallocated_dn != []
-            if DEBUG:
-                print(action_to_execute, next_call_come, self.mansion.is_done)
-                print(self.mansion._wait_upward_persons_queue)
-                print(self.mansion._wait_downward_persons_queue)
-                print(self.mansion.finish_person_num, self.mansion._person_generator.total_person_num)
-                for idx, elev in enumerate(self.mansion._elevators):
-                    print(idx, elev._run_state, elev.state)
+            # if DEBUG:
+            #     print(action_to_execute, next_call_come, self.mansion.is_done)
+            #     print(self.mansion._wait_upward_persons_queue)
+            #     print(self.mansion._wait_downward_persons_queue)
+            #     print(self.mansion.finish_person_num, self.mansion._person_generator.total_person_num)
+            #     for idx, elev in enumerate(self.mansion._elevators):
+            #         print(idx, elev._run_state, elev.state)
 
 
             # cal reward
@@ -564,19 +593,23 @@ class SmecRLEnv(gym.Env):
         floor2elevator_dis = torch.tensor(floor2elevator_dis).to(device)
         return floor2elevator_dis
 
+    # no attention mask, pure convenience mask
     def get_smec_state(self):
         up_wait, down_wait, loading, location, up_call, down_call, load_up, load_down = self.mansion.get_rl_state(
             encode=True)
         up_wait, down_wait, loading, location = torch.tensor(up_wait), torch.tensor(down_wait), torch.tensor(
             loading), torch.tensor(location)
-        legal_masks = self.get_action_mask(up_wait.device)
         self.cur_adj_matrix = self.gb.update_adj_matrix(self.cur_adj_matrix, up_call, down_call)
         self.cur_node_feature = self.gb.update_node_feature(self.cur_node_feature, up_wait, down_wait, load_up,
                                                             load_down, location)
         distances = self.get_floor2elevator_dis(up_wait.device)
         valid_action_mask = self.mansion.get_unallocated_floors_mask()
         valid_action_mask = torch.tensor(valid_action_mask).to(up_wait.device)
-        ms = {'adj_m': self.cur_adj_matrix, 'node_feature_m': self.cur_node_feature, 'legal_masks': legal_masks,
+
+        legal_masks = self.get_action_mask(up_wait.device)
+        elevator_mask, floor_mask = self.get_action_mask_plus(up_wait.device)
+        ms = {'adj_m': self.cur_adj_matrix, 'node_feature_m': self.cur_node_feature,
+              'legal_masks': legal_masks, 'elevator_mask': elevator_mask, 'floor_mask': floor_mask,
               'distances': distances, 'valid_action_mask': valid_action_mask}
         return ms
 
@@ -596,6 +629,7 @@ class SmecRLEnv(gym.Env):
 
         # self.data_idx = 0
         # self.next_generate_person = self.real_dataset[self.data_idx]
+        # print(state)
         return state
 
     def render(self, **kwargs):

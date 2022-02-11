@@ -52,7 +52,7 @@ import time
 class SmecEnv:
     def __init__(self, data_file='smec_rl/simple_dataset_v2_test.csv', config_file='./smec_liftsim/rl_config2.ini', render=True, seed=10, forbid_uncalled=False,
     # def __init__(self, data_file='smec_rl/simple_dataset.csv', config_file=None, render=True, seed=None, forbid_uncalled=False,
-                 use_graph=True, real_data=True, use_advice=False, special_reward=False, data_dir=None, file_begin_idx=None):
+                 use_graph=True, real_data=True, use_advice=False, special_reward=False, data_dir=None, file_begin_idx=None, dos=''):
         if not config_file:
             config_file = os.path.join(os.path.dirname(__file__) + '/smec_liftsim/rl_config2.ini')
         file_name = config_file
@@ -66,7 +66,7 @@ class SmecEnv:
         # dos = '30:00-40:00'
         # dos = ''
         # dos = '00:00-06:00'
-        dos = '06:00-12:00'
+        # dos = '06:00-12:00'
         # dos = '10:00-16:00'
         if dos == '':
             st = 0
@@ -81,8 +81,8 @@ class SmecEnv:
             person_generator.configure(config['PersonGenerator'])
         else:
             # person_generator = FixedDataGenerator(data_file=data_file, data_dir=data_dir, file_begin_idx=file_begin_idx, data_of_section=dos)
-            # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=1)
-            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
+            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=2)
+            # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
 
         self._config = MansionConfig(
             dt=time_step,
@@ -532,28 +532,30 @@ def evaluate():
 
 
 if __name__ == '__main__':
-    is_eval = False
-    if is_eval:
-        all_action = evaluate()
-        aidx = 0
+    dds = [
+        # ('./train_data/new/lunchpeak', '00:00-06:00'),
+        ('./train_data/new/uppeak', '30:00-36:00'),
+        # ('./train_data/new/dnpeak', '06:00-12:00'),
+        # ('./train_data/new/notpeak', '00:00-06:00'),
+    ]
+    file = open('experiment_results/sfm.log', 'a')
+    for dd in dds:
+        print('-'*50, file=file)
+        print(dd[0], dd[1], file=file)
+        elev_env = SmecEnv(render=False, data_dir=dd[0], dos=dd[1])
 
-    # elev_env = SmecEnv(render=False, data_dir='./train_data/new/lunchpeak')
-    elev_env = SmecEnv(render=True, data_dir='./train_data/new/dnpeak')
-    test_num = 10
-    total_res = 0
-    total_energies = 0
-    for tn in range(test_num):
+        test_num = 20
+        total_res = 0
+        total_energies = 0
+        for tn in range(test_num):
 
-        elev_env.reset()
-        floor_num = elev_env.mansion._floor_number
-        # print(elev_env.mansion.person_generator.data.data)
-        solver = LocalSearch(elev_env)
-        total_energy = 0
-        while not elev_env.is_end():
-
-            # 问题是现在action是多维的，按理来说同一dt内也不会有多个楼层需要分配，但是可以重分配的话，就有了。所以这还是个组合优化的问题？但也可以先不考虑重分配，假设每次都是当前最优，就是贪心。
-            unallocated_up, unallocated_dn = elev_env.mansion.get_unallocated_floors()
-            if not is_eval:
+            elev_env.reset()
+            floor_num = elev_env.mansion._floor_number
+            # print(elev_env.mansion.person_generator.data.data)
+            solver = LocalSearch(elev_env)
+            total_energy = 0
+            while not elev_env.is_end():
+                unallocated_up, unallocated_dn = elev_env.mansion.get_unallocated_floors()
                 # print(elev_env.mansion.elevators_car_call_change, '+'*20, 'car call re dispatch...')
                 if unallocated_dn or unallocated_up:
                     add_hallcalls = unallocated_up
@@ -565,18 +567,19 @@ if __name__ == '__main__':
                 else:
                     dispatch = solver.get_action([])
                     action = solver.dict_dispatch2hallcalls(dispatch)
-            else:
-                action = all_action[aidx]
-                aidx += 1
-            # print(f'execute action: {action}')
-            total_energy += elev_env.step(action)
+                # print(f'execute action: {action}')
+                total_energy += elev_env.step(action)
 
-        # print(elev_env.person_info)
-        awt, att, pnum = elev_env.get_reward()
-        print(f'{awt:.2f} {att:.2f} {awt+att:.2f} {total_energy:.2f} for {pnum} people')
-        total_res += awt+att
-        total_energies += total_energy
-    print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}')
+            # print(elev_env.person_info)
+            awt, att, pnum = elev_env.get_reward()
+            print(f'{awt:.2f} {att:.2f} {awt+att:.2f} {total_energy:.2f} for {pnum} people')
+            print(f'{awt:.2f} {att:.2f} {awt+att:.2f} {total_energy:.2f} for {pnum} people', file=file)
+            total_res += awt+att
+            total_energies += total_energy
+        print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}')
+        print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}', file=file)
+        print(file=file)
+    file.close()
 
 
 

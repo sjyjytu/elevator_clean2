@@ -90,7 +90,7 @@ class SmecBase(nn.Module):
 
 
 class SmecPolicy(nn.Module):
-    def __init__(self, lift_num, floor_num, use_graph=True, open_mask=True, initialization=False, use_advice=False):
+    def __init__(self, lift_num, floor_num, use_graph=True, open_mask=True, initialization=False, use_advice=False, device='cpu'):
         super(SmecPolicy, self).__init__()
         self.base = SmecBase(lift_num, floor_num, use_graph=use_graph)
         assert use_graph

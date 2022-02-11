@@ -40,6 +40,8 @@ class SmecRolloutStorage(object):
             self.zero_obs = OrderedDict({'adj_m': torch.zeros(env_num, self.graph_node_num, self.graph_node_num),
                                          'node_feature_m': torch.zeros(env_num, self.graph_node_num, 3),
                                          'legal_masks': torch.zeros(env_num, floor_num * 2, candidate_num),
+                                         'elevator_mask': torch.zeros(env_num, elevator_num, floor_num * 2),
+                                         'floor_mask': torch.zeros(env_num, floor_num * 2),
                                          'distances': torch.zeros(env_num, floor_num * 2, elevator_num),
                                          'valid_action_mask': torch.zeros(env_num, floor_num * 2)
                                          })

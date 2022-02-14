@@ -37,7 +37,7 @@ from smec_liftsim.generator_proxy import PersonGenerator
 from smec_liftsim.fixed_data_generator import FixedDataGenerator
 from smec_liftsim.mansion_configs import MansionConfig
 from smec_liftsim.mansion_manager import MansionManager
-from smec_liftsim.smec_elevator_new import SmecElevator
+from smec_liftsim.smec_elevator_new2 import SmecElevator
 from smec_liftsim.utils import ElevatorHallCall
 import configparser
 import os
@@ -81,7 +81,7 @@ class SmecEnv:
             person_generator.configure(config['PersonGenerator'])
         else:
             # person_generator = FixedDataGenerator(data_file=data_file, data_dir=data_dir, file_begin_idx=file_begin_idx, data_of_section=dos)
-            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=2)
+            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=1)
             # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
 
         self._config = MansionConfig(
@@ -102,6 +102,7 @@ class SmecEnv:
 
         self.mansion = MansionManager(int(config['MansionInfo']['ElevatorNumber']), person_generator, self._config,
                                       config['MansionInfo']['Name'])
+        self.mansion.use_old_unallocate_version = True
         self.use_graph = use_graph
         self.viewer = None
         self.open_render = render
@@ -122,8 +123,14 @@ class SmecEnv:
     def step_dp(self, action, dcar_call=True):
         next_call_come = False
         total_energy = 0
+        rewards = []
         while not next_call_come and not self.is_end():
-            ret = self.mansion.run_mansion(action, use_rules=False, replace_hallcall=True)
+            # ret = self.mansion.run_mansion(action, use_rules=False, replace_hallcall=True)
+            ret = self.mansion.run_mansion(action, use_rules=False, replace_hallcall=True, special_reward=True)
+            energy = ret[-1]
+            hall_waiting_rewards = ret[-3]
+            car_waiting_rewards = ret[-2]
+
             total_energy += ret[-1]
             self.mansion.generate_person()
             if self.open_render:
@@ -131,7 +138,11 @@ class SmecEnv:
             unallocated_up, unallocated_dn = self.mansion.get_unallocated_floors()
             action = None
             next_call_come = unallocated_up != [] or unallocated_dn != []
-        return total_energy
+
+            factor = 0
+            reward = 0.01 * (-np.array(hall_waiting_rewards) - factor * np.array(car_waiting_rewards) - 5e-4 * energy)
+            rewards.append(sum(reward))
+        return total_energy, rewards
 
     def step(self, action):
         return self.step_dp(action)
@@ -535,11 +546,13 @@ if __name__ == '__main__':
     dds = [
         # ('./train_data/new/lunchpeak', '00:00-06:00'),
         ('./train_data/new/uppeak', '30:00-36:00'),
-        # ('./train_data/new/dnpeak', '06:00-12:00'),
-        # ('./train_data/new/notpeak', '00:00-06:00'),
+        ('./train_data/new/dnpeak', '06:00-12:00'),
+        ('./train_data/new/notpeak', '00:00-06:00'),
     ]
-    file = open('experiment_results/sfm.log', 'a')
+
     for dd in dds:
+        pattern = dd[0].split('/')[-1]
+        file = open(f'experiment_results/rewards/sfm2-{pattern}.log', 'a')
         print('-'*50, file=file)
         print(dd[0], dd[1], file=file)
         elev_env = SmecEnv(render=False, data_dir=dd[0], dos=dd[1])
@@ -547,6 +560,7 @@ if __name__ == '__main__':
         test_num = 20
         total_res = 0
         total_energies = 0
+        rs = []
         for tn in range(test_num):
 
             elev_env.reset()
@@ -568,7 +582,9 @@ if __name__ == '__main__':
                     dispatch = solver.get_action([])
                     action = solver.dict_dispatch2hallcalls(dispatch)
                 # print(f'execute action: {action}')
-                total_energy += elev_env.step(action)
+                energy, rewards = elev_env.step(action)
+                total_energy += energy
+                rs += rewards
 
             # print(elev_env.person_info)
             awt, att, pnum = elev_env.get_reward()
@@ -578,8 +594,14 @@ if __name__ == '__main__':
             total_energies += total_energy
         print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}')
         print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}', file=file)
+        print(f'Reward list: {rs}', file=file)
         print(file=file)
-    file.close()
+        import matplotlib.pyplot as plt
+        plt.figure()
+        plt.plot(rs)
+        plt.show()
+        plt.close()
+        file.close()
 
 
 

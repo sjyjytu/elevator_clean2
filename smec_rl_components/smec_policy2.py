@@ -102,6 +102,7 @@ class SmecPolicy(nn.Module):
             self.dist = SmecSampler2(self.base.a_output, lift_num + 1, use_graph)
 
         self.open_mask = open_mask
+
         self.AttentionFactor = SelfAttention(floor_num*2, floor_num*2, 128, 4, 0.3, elevator_num=lift_num, floor_num=floor_num, device=device)
         self.elevator_num = lift_num
         self.floor_num = floor_num
@@ -147,8 +148,10 @@ class SmecPolicy(nn.Module):
         else:
             convenience_factor = None
         # dist = self.dist(actor_features, convenience_factor=convenience_factor)
-        print(convenience_factor)
+        # print(convenience_factor)、
         legal_mask = inputs_obs['legal_masks'] if self.open_mask else None
+        # legal_mask = inputs_obs['elevator_mask'].permute(0, 2, 1).contiguous() if self.open_mask else None
+        # dist = self.dist(actor_features, convenience_factor=None)
         dist = self.dist(actor_features, convenience_factor=legal_mask)
 
         # add by JY, elevator chooses floor with lstm.
@@ -171,17 +174,19 @@ class SmecPolicy(nn.Module):
 
     def evaluate_actions(self, inputs_obs, masks, action):
         value, actor_features, rule = self.base(inputs_obs)
-        # legal_mask = inputs_obs['legal_masks'] if self.open_mask else None
-        # dist = self.dist(actor_features, convenience_factor=legal_mask)
-        if self.open_mask:
-            elevator_mask, floor_mask = inputs_obs['elevator_mask'], inputs_obs['floor_mask']
-            elevator_mask = elevator_mask.view((-1, 2*self.floor_num))
-            floor_mask = floor_mask.repeat(1, self.floor_num, 1).view((-1, 2*self.floor_num))
-            convenience_factor = self.AttentionFactor(elevator_mask, floor_mask, floor_mask)  # (num_env, elevator_num, 2f)
-            convenience_factor = convenience_factor.permute(0, 2, 1).contiguous()  # (num_env, 2f, elevator_num)
-        else:
-            convenience_factor = None
-        dist = self.dist(actor_features, convenience_factor=convenience_factor)
+        legal_mask = inputs_obs['legal_masks'] if self.open_mask else None
+        # legal_mask = inputs_obs['elevator_mask'].permute(0, 2, 1).contiguous() if self.open_mask else None
+        # dist = self.dist(actor_features, convenience_factor=None)
+        dist = self.dist(actor_features, convenience_factor=legal_mask)
+        # if self.open_mask:
+        #     elevator_mask, floor_mask = inputs_obs['elevator_mask'], inputs_obs['floor_mask']
+        #     elevator_mask = elevator_mask.view((-1, 2*self.floor_num))
+        #     floor_mask = floor_mask.repeat(1, self.floor_num, 1).view((-1, 2*self.floor_num))
+        #     convenience_factor = self.AttentionFactor(elevator_mask, floor_mask, floor_mask)  # (num_env, elevator_num, 2f)
+        #     convenience_factor = convenience_factor.permute(0, 2, 1).contiguous()  # (num_env, 2f, elevator_num)
+        # else:
+        #     convenience_factor = None
+        # dist = self.dist(actor_features, convenience_factor=convenience_factor)
 
         action_log_probs = dist.log_probs(action)
         dist_entropy = dist.entropy()

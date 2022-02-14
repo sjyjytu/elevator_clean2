@@ -4,66 +4,117 @@ from smec_liftsim.smec_rl_env import *
 from smec_rl_components.smec_policy import UniformPolicy, DistancePolicy
 
 
-def evaluate_general(eval_env, device, method, args, verbose=False):
-    obs = eval_env.reset()
-    for k in obs:
-        obs[k] = obs[k].to(device).unsqueeze(0)
-    dt = eval_env._config._delta_t
-    total_energy = 0
-    for time_step in range(int((3600 + 60) / dt)):
-        # debug
-        # if True and time_step > (865 / dt):
-        # if eval_env.open_render:
-        #     eval_env.render()
-        # step method
-        if method == 'rl':
-            with torch.no_grad():
-                _, action, _, rule = args["actor_critic"].act(obs, deterministic=True)
-            # Observe reward and next obs
-            actions = torch.cat((action.cpu(), rule.cpu()), dim=1)
-            actions = actions.squeeze(0)
-            # print(actions[0][0])
-            obs, _, done, info = eval_env.step(actions)
-        elif method == 'shortest':
-            obs, _, done, _ = eval_env.step_shortest_elev(random_policy=False, use_rules=args["use_rules"])
-        elif method == 'smec':
-            obs, _, done, _ = eval_env.step_smec()
-        elif method == 'hand':
-            obs, _, done, _ = eval_env.step_hand(use_rules=args["use_rules"])
-        elif method == 'random':
-            obs, _, done, _ = eval_env.step_shortest_elev(random_policy=True, use_rules=args["use_rules"])
-        else:
-            print("Method not implemented!")
-            return -1
-
-        for k in obs:
-            obs[k] = obs[k].to(device).unsqueeze(0)
-
-        total_energy += info['total_energy']
-
-        if done:
-            break
-
+def cal_ast(pinfo):
     waiting_time = []
     transmit_time = []
-    for k in eval_env.mansion.person_info.keys():
-        info = eval_env.mansion.person_info[k]
-        if verbose:
-            print(k, end=' | ')
-            print('ele %d' % (info[0] + 1), end=' | ')
-            for p_t in info[1:]:
-                print('%d : %.1f' % (p_t // 60, p_t % 60), end=' | ')
-        waiting_time.append(info[2])
-        transmit_time.append(info[4])
+    for k in pinfo.keys():
+        info = pinfo[k]
+        if len(info) >= 5:
+            waiting_time.append(info[2])
+            transmit_time.append(info[4])
+    return np.mean(waiting_time) + np.mean(transmit_time)
 
-    eval_env.close()
-    print(
-        f"-------------------------------------------------evaluation result-------------------------------------------------")
-    awt = np.mean(waiting_time)
-    att = np.mean(transmit_time)
-    print(
-        f"[Evaluation] for {len(waiting_time)} people: mean waiting time {awt:.1f}, mean transmit time: {att:.1f}.")
-    return awt + att, total_energy
+
+def evaluate_general(eval_env, device, method, args, verbose=False, file=None, test_num=1):
+    total_awt = 0
+    total_att = 0
+    total_energies = 0
+    import matplotlib.pyplot as plt
+    accumulate_energy = [0]
+    ast_list = []
+    reward_list = [0]
+    for tn in range(test_num):
+        obs = eval_env.reset()
+        for k in obs:
+            obs[k] = obs[k].to(device).unsqueeze(0)
+        dt = eval_env._config._delta_t
+        energy = 0
+        for time_step in range(int((3600 + 60) / dt)):
+            # debug
+            # if True and time_step > (865 / dt):
+            # if eval_env.open_render:
+            #     eval_env.render()
+            # step method
+            if method == 'rl':
+                with torch.no_grad():
+                    _, action, _, rule = args["actor_critic"].act(obs, deterministic=True)
+                # Observe reward and next obs
+                actions = torch.cat((action.cpu(), rule.cpu()), dim=1)
+                actions = actions.squeeze(0)
+                # print(actions[0][0])
+                obs, r, done, info = eval_env.step(actions)
+            elif method == 'shortest':
+                obs, r, done, _ = eval_env.step_shortest_elev(random_policy=False, use_rules=args["use_rules"])
+            elif method == 'smec':
+                obs, r, done, _ = eval_env.step_smec()
+            elif method == 'hand':
+                obs, r, done, _ = eval_env.step_hand(use_rules=args["use_rules"])
+            elif method == 'random':
+                obs, r, done, _ = eval_env.step_shortest_elev(random_policy=True, use_rules=args["use_rules"])
+            else:
+                print("Method not implemented!")
+                return -1
+
+            for k in obs:
+                obs[k] = obs[k].to(device).unsqueeze(0)
+
+            energy += info['total_energy']
+            # accumulate_energy.append(accumulate_energy[-1]+info['total_energy'])
+            accumulate_energy.append(info['total_energy'])
+            ast_list.append(cal_ast(eval_env.mansion.person_info))
+            # r = sum(r)
+            # reward_list.append(r)
+            reward_list_for_eval = info['reward_list_for_eval']
+            reward_list += reward_list_for_eval
+
+            if done:
+                break
+
+        waiting_time = []
+        transmit_time = []
+        for k in eval_env.mansion.person_info.keys():
+            info = eval_env.mansion.person_info[k]
+            if verbose:
+                print(k, end=' | ')
+                print('ele %d' % (info[0] + 1), end=' | ')
+                for p_t in info[1:]:
+                    print('%d : %.1f' % (p_t // 60, p_t % 60), end=' | ')
+            waiting_time.append(info[2])
+            transmit_time.append(info[4])
+
+        eval_env.close()
+        print(
+            f"-------------------------------------------------evaluation result-------------------------------------------------")
+        awt = np.mean(waiting_time)
+        att = np.mean(transmit_time)
+        print(
+            f"[Evaluation] for {len(waiting_time)} people: mean waiting time {awt:.1f}, mean transmit time: {att:.1f},"
+            f" sum time: {awt+att:.1f}. Total energy: {energy}.")
+        if file:
+            print(
+                f"[Evaluation] for {len(waiting_time)} people: mean waiting time {awt:.1f}, mean transmit time: {att:.1f},"
+                f" sum time: {awt+att:.1f}. Total energy: {energy}.", file=file)
+
+        total_awt += awt
+        total_att += att
+        total_energies += energy
+    # plt.figure()
+    # plt.plot(accumulate_energy)
+    # plt.show()
+    # plt.close()
+    #
+    # plt.figure()
+    # plt.plot(ast_list)
+    # plt.show()
+    # plt.close()
+    #
+    # plt.figure()
+    # plt.plot(reward_list)
+    # plt.show()
+    # plt.close()
+    print(f'Reward list: {reward_list}', file=file)
+
+    return total_awt/test_num, total_att/test_num, total_energies/test_num
 
 
 def evaluate(actor_critic, eval_env, device, verbose=False):

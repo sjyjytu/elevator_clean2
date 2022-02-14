@@ -42,7 +42,7 @@ import numpy as np
 # REWARD_STEP = 2048
 # TEST_STEP = 102400
 
-REWARD_STEP = 1024
+REWARD_STEP = 128
 TEST_STEP = 51200
 
 figure_dir = f'train_figures/{"-".join(exp_names)}'

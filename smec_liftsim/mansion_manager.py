@@ -78,6 +78,7 @@ class MansionManager(object):
         # 用于估计积累了多少人
         self.updn_last_serve_time = [self._config.raw_time for i in range(self._floor_number * 2)]
         # self.car_last_finish_time = [self._config.raw_time for i in self._floor_number]
+        self.use_old_unallocate_version = False
 
     def reset_env(self):
         self._elevators = []
@@ -314,8 +315,9 @@ class MansionManager(object):
         return up_called_floors, dn_called_floors
 
     def get_unallocated_floors(self):  # implemented by Jy
-        return self.get_unallocated_floors_v1()
-        # return self.get_unallocated_floors_v2()
+        if self.use_old_unallocate_version:
+            return self.get_unallocated_floors_v1()
+        return self.get_unallocated_floors_v2()
 
     def get_unallocated_floors_mask(self):
         unallocated_masks = [0 for _ in range(2 * self._floor_number)]

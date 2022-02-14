@@ -255,11 +255,13 @@ def main():
 
         log_file.close()
     else:
+        file = open(f'experiment_results/ablation/rllift2-{args.exp_name}.log', 'a')
+        print('-' * 50, file=file)
         evaluate_args = {'use_rules': args.use_rules}
         if args.evaluate_method == 'rl':
             model_path = os.path.join(log_dir, args.exp_name + ".pt")
             actor_critic = torch.load(model_path, map_location=device)[0]
-            print(actor_critic.AttentionFactor)
+            # print(actor_critic.AttentionFactor)
             # actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
             # actor_critic.open_mask = False
             evaluate_args['actor_critic'] = actor_critic
@@ -267,19 +269,16 @@ def main():
 
         test_env = make_env(seed=args.seed, render=args.render, use_graph=args.graph, gamma=args.gamma,
                             real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, file_begin_idx=17, dos=args.dos)()
-        if args.data_dir:
-            test_num = 20
-            total_res = 0
-            total_energies = 0
-            for i in range(test_num):
-                res, total_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
-                print(f"finish evaluation. res score: {res}, total_energy: {total_energy}")
-                total_res += res
-                total_energies += total_energy
-            print(f'average time: {total_res / test_num:.2f} average energy: {total_energies / test_num:.2f}')
-        else:
-            res, total_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args)
-            print(f"finish evaluation. res score: {res}, total_energy: {total_energy}")
+
+        test_num = 20
+        avg_awt, avg_att, avg_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args,
+                                                        file=file, test_num=test_num)
+        print(f'average awt: {avg_awt:.2f}, average att: {avg_att:.2f}, average ast: {avg_awt + avg_att:.2f},'
+              f' average energy: {avg_energy:.0f}')
+        print(f'average awt: {avg_awt:.2f}, average att: {avg_att:.2f}, average ast: {avg_awt + avg_att:.2f},'
+              f' average energy: {avg_energy:.0f}', file=file)
+
+        file.close()
 
 
 if __name__ == '__main__':

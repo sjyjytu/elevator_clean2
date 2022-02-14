@@ -135,6 +135,7 @@ class SmecPolicy(nn.Module):
         # rule = rule.squeeze(2)
         # dist = self.dist(actor_features, legal_mask=inputs_obs['legal_masks'])
         legal_mask = inputs_obs['legal_masks'] if self.open_mask else None
+        # dist = self.dist(actor_features, legal_mask=None)
         dist = self.dist(actor_features, legal_mask=legal_mask)
 
         # add by JY, elevator chooses floor with lstm.
@@ -158,6 +159,7 @@ class SmecPolicy(nn.Module):
     def evaluate_actions(self, inputs_obs, masks, action):
         value, actor_features, rule = self.base(inputs_obs)
         legal_mask = inputs_obs['legal_masks'] if self.open_mask else None
+        # dist = self.dist(actor_features, legal_mask=None)
         dist = self.dist(actor_features, legal_mask=legal_mask)
 
         action_log_probs = dist.log_probs(action)

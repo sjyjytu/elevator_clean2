@@ -59,8 +59,8 @@ class SmecRLEnv(gym.Env):
             person_generator.configure(config['PersonGenerator'])
         else:
             # person_generator = FixedDataGenerator(data_file=data_file, data_dir=data_dir, file_begin_idx=file_begin_idx, data_of_section=dos)
-            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
-            # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=1)
+            # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
+            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=1)
         self._config = MansionConfig(
             dt=time_step,
             number_of_floors=int(config['MansionInfo']['NumberOfFloors']),
@@ -351,6 +351,7 @@ class SmecRLEnv(gym.Env):
         reward = np.zeros((self.floor_num*2, ))
         arrive_wts = [[] for i in range(self.elevator_num)]
         total_energy = 0
+        reward_list_for_eval = []
         while not next_call_come and not self.mansion.is_done:
             calling_wt, arrive_wt, loaded_num, enter_num, no_io_masks, awt, hall_waiting_rewards, car_waiting_rewards, energy \
                 = self.mansion.run_mansion(action_to_execute, special_reward=True, advantage_floor=advantage_floor)
@@ -375,7 +376,9 @@ class SmecRLEnv(gym.Env):
 
             # cal reward
             factor = 0
-            reward += 0.01 * (-np.array(hall_waiting_rewards) - factor * np.array(car_waiting_rewards) - 5e-4 * energy)
+            r = 0.01 * (-np.array(hall_waiting_rewards) - factor * np.array(car_waiting_rewards) - 5e-4 * energy)
+            reward += r
+            reward_list_for_eval.append(sum(r))
             total_energy += energy
             # print(reward)
             # print(f'{hall_waiting_rewards[0]} {car_waiting_rewards[0]} {5e-4 * energy} {reward[0]}')
@@ -383,9 +386,10 @@ class SmecRLEnv(gym.Env):
         # TODO: calculate reward, during the time interval between two person, finish how many person?
         finish_time = self._config.raw_time
         delta_t = finish_time - cur_time
-        reward = reward * self._config._delta_t / delta_t
+        timestep = delta_t / self._config._delta_t
+        reward = reward / timestep
         info = {'waiting_time': concate_list(arrive_wts), 'sum_wait_rew': 0, 'sum_io_rew': 0,
-                'sum_enter_rew': 0, 'awt': awt, 'total_energy': total_energy}
+                'sum_enter_rew': 0, 'awt': awt, 'total_energy': total_energy, 'reward_list_for_eval': reward_list_for_eval}
         new_obs = self.get_smec_state()
         self.mansion.generate_person()
         done = self.mansion.is_done

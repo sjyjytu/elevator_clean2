@@ -60,7 +60,7 @@ class SmecRLEnv(gym.Env):
         else:
             # person_generator = FixedDataGenerator(data_file=data_file, data_dir=data_dir, file_begin_idx=file_begin_idx, data_of_section=dos)
             # person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos)
-            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=1)
+            person_generator = RandomDataGenerator(data_dir=data_dir, data_of_section=dos, random_or_load_or_save=0)
         self._config = MansionConfig(
             dt=time_step,
             number_of_floors=int(config['MansionInfo']['NumberOfFloors']),

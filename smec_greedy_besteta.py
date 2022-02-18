@@ -544,7 +544,7 @@ def evaluate():
 
 if __name__ == '__main__':
     dds = [
-        # ('./train_data/new/lunchpeak', '00:00-06:00'),
+        ('./train_data/new/lunchpeak', '00:00-06:00'),
         ('./train_data/new/uppeak', '30:00-36:00'),
         ('./train_data/new/dnpeak', '06:00-12:00'),
         ('./train_data/new/notpeak', '00:00-06:00'),
@@ -552,13 +552,15 @@ if __name__ == '__main__':
 
     for dd in dds:
         pattern = dd[0].split('/')[-1]
-        file = open(f'experiment_results/rewards/sfm2-{pattern}.log', 'a')
+        file = open(f'experiment_results/smec/sfm2-{pattern}.log', 'a')
         print('-'*50, file=file)
         print(dd[0], dd[1], file=file)
         elev_env = SmecEnv(render=False, data_dir=dd[0], dos=dd[1])
 
         test_num = 20
         total_res = 0
+        total_awt = 0
+        total_att = 0
         total_energies = 0
         rs = []
         for tn in range(test_num):
@@ -591,9 +593,13 @@ if __name__ == '__main__':
             print(f'{awt:.2f} {att:.2f} {awt+att:.2f} {total_energy:.2f} for {pnum} people')
             print(f'{awt:.2f} {att:.2f} {awt+att:.2f} {total_energy:.2f} for {pnum} people', file=file)
             total_res += awt+att
+            total_awt += awt
+            total_att += att
             total_energies += total_energy
-        print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}')
-        print(f'average time: {total_res/test_num:.2f} average energy: {total_energies/test_num:.2f}', file=file)
+        print(f'awt: {total_awt / test_num:.2f} att: {total_att / test_num:.2f} '
+              f'average time: {total_res / test_num:.2f} average energy: {total_energies / test_num:.2f}')
+        print(f'awt: {total_awt / test_num:.2f} att: {total_att / test_num:.2f} '
+              f'average time: {total_res / test_num:.2f} average energy: {total_energies / test_num:.2f}', file=file)
         print(f'Reward list: {rs}', file=file)
         print(file=file)
         import matplotlib.pyplot as plt

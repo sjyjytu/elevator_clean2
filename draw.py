@@ -22,11 +22,11 @@
 # exp_name = 'jan07_simplev2'
 # exp_name = 'jan07_simplev2_nomask'
 # exp_name = 'jan14_lunch_random0-6'
-exp_name = 'jan14_lunch_random0-6_nomask'
+# exp_name = 'jan14_lunch_random0-6_nomask'
 # exp_name = 'jan30_lunch_random0-6_debug'
 # exp_name = 'feb02_down_random6-12'
 # exp_name = 'feb08_down_random6-12_attention'
-# exp_name = 'feb08_lunch_random0-6_attention'
+exp_name = 'feb08_lunch_random0-6_attention'
 # exp_name = 'feb08_notpeak_random0-6_attention'
 # exp_name = 'feb08_notpeak_random0-6'
 mean_interval = 20

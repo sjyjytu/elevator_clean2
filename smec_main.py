@@ -219,22 +219,36 @@ def main():
                 if eval_env is None:
                     eval_env = make_env(seed=0, render=False, forbid_uncalled=args.forbid_uncalled, gamma=args.gamma,
                                         real_data=args.real_data, use_advice=args.use_advice, data_dir=args.data_dir, dos=args.dos)()
-                res = 0
-                total_energy = 0
-                for i in range(args.test_num):
-                    evaluate_args = {'actor_critic': actor_critic}
-                    r, e = evaluate_general(eval_env, device, "rl", evaluate_args)
-                    res += r
-                    total_energy += e
-                res /= args.test_num
-                total_energy /= args.test_num
-                print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}")
-                if save_log_by_hand:
-                    print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}", file=log_file, flush=True)
+
+
+                # res = 0
+                # total_energy = 0
+                # for i in range(args.test_num):
+                #     evaluate_args = {'actor_critic': actor_critic}
+                #     r, e = evaluate_general(eval_env, device, "rl", evaluate_args)
+                #     res += r
+                #     total_energy += e
+                # res /= args.test_num
+                # total_energy /= args.test_num
+                # print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}")
+                # if save_log_by_hand:
+                #     print(f"[Evaluation] Curr mean val waiting time: {res:.1f}, mean energy: {total_energy:.1f}", file=log_file, flush=True)
                 # res = evaluate(actor_critic, eval_env, device)
                 # print(f"[train] Curr val waiting time: {res:.1f}")
-                if res < best_score:
-                    best_score = res
+                # if res < best_score:
+                #     best_score = res
+                #     torch.save([actor_critic], os.path.join(log_dir, args.exp_name + ".pt"))
+                evaluate_args = {'actor_critic': actor_critic}
+                avg_awt, avg_att, avg_energy = evaluate_general(test_env, device, args.evaluate_method, evaluate_args,
+                                                                file=None, test_num=args.test_num)
+                print(f"[Evaluation] Curr mean awt: {avg_awt:.2f}, mean att: {avg_att:.2f}, mean energy: {avg_energy:.0f}")
+                if save_log_by_hand:
+                    print(
+                        f"[Evaluation] Curr mean awt: {avg_awt:.2f}, mean att: {avg_att:.2f}, mean energy: {avg_energy:.0f}", file=log_file, flush=True)
+                # if avg_awt + avg_att < best_score:
+                #     best_score = avg_awt + avg_att
+                if avg_awt < best_score:
+                    best_score = avg_awt
                     torch.save([actor_critic], os.path.join(log_dir, args.exp_name + ".pt"))
 
             # if j % 50 == 0:
@@ -255,14 +269,14 @@ def main():
 
         log_file.close()
     else:
-        file = open(f'experiment_results/ablation/rllift2-{args.exp_name}.log', 'a')
+        file = open(f'experiment_results/ablation/rllift2-{args.exp_name}-nothing.log', 'a')
         print('-' * 50, file=file)
         evaluate_args = {'use_rules': args.use_rules}
         if args.evaluate_method == 'rl':
             model_path = os.path.join(log_dir, args.exp_name + ".pt")
             actor_critic = torch.load(model_path, map_location=device)[0]
             # print(actor_critic.AttentionFactor)
-            # actor_critic = SmecPolicy(4, 16, open_mask=True, use_advice=False)  # 测一下训练是否无效
+            # actor_critic = SmecPolicy(4, 16, open_mask=False, use_advice=False)  # 测一下训练是否无效
             # actor_critic.open_mask = False
             evaluate_args['actor_critic'] = actor_critic
             print('mask: ', actor_critic.open_mask)

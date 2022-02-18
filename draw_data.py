@@ -112,7 +112,7 @@ def draw_whole():
 
     figure_dir = 'file_figures'
     data_dirs = ['dnpeak', 'notpeak', 'lunchpeak', 'uppeak']
-    data_idx = 2
+    data_idx = 1
     dataX = process2(data_dir='./train_data/new/%s' % data_dirs[data_idx])
     # print(dataX)
 
@@ -126,6 +126,7 @@ def draw_whole():
     dataX = np.average(dataX, axis=0)  # 均值
     print(dataX)
     # z = np.sum(z, axis=0)  # 查看总人数
+    print(dataX.shape)
     for t in range(dataX.shape[0]):
         z = dataX[t]
         z = z.flatten()

@@ -9,28 +9,20 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 #
-# # REWARD_STEP = 128
-# # TEST_STEP = 3840
-# REWARD_STEP = 2048
-# TEST_STEP = 102400
-#
-# # REWARD_STEP = 1024
-# # TEST_STEP = 51200
-#
-# figure_dir = f'train_figures/{"-".join(exp_names)}'
-# # plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
-# plt.rcParams['font.family'] = 'sans-serif'
-# plt.rcParams['font.sans-serif'] = ['Arial']
-# plt.rcParams['figure.figsize'] = (9.0, 6.0) # 设置figure_size尺寸
-#
-# plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
-#
-# legend_size = 18
-# xylabel_size = 20
-# xystick_size = 18
-#
-# if not os.path.exists(figure_dir):
-#     os.makedirs(figure_dir)
+figure_dir = 'train_figures/baseline'
+# plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Arial']
+plt.rcParams['figure.figsize'] = (9.0, 6.0) # 设置figure_size尺寸
+
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+
+legend_size = 18
+xylabel_size = 20
+xystick_size = 18
+
+if not os.path.exists(figure_dir):
+    os.makedirs(figure_dir)
 #
 # mean_interval = 20
 #
@@ -198,14 +190,52 @@ COLORS = ['orangered', 'forestgreen',  'purple', 'dodgerblue',  'magenta', 'salm
 # plt.plot(rsm, label='rllift', color=COLORS[i])
 
 mode = 'lunchpeak'
+baseline = 'eta'
+file = f'experiment_results/rewards/{baseline}-{mode}.log'
+rs = []
+with open(file, 'r') as f:
+    for l in f:
+        # print(l)
+        flag = False
+        if l.startswith('Reward list: '):
+            rs = l.strip('\n')[len('Reward list: ['):-1].split(',')
+            rs = [float(r.strip(' ')) for r in rs]
+
+            break
+        elif l.startswith('[Reward List]: '):
+            rs_ = l.strip('\n')[len('[Reward List]: ['):-1].split(',')
+            rs_ = [float(r.strip(' ')) for r in rs_]
+            # print(method, mode, len(rs_))
+            if baseline == 'dqn' or baseline == 'egc':
+                if mode == 'uppeak':
+                    # print('here',len(rs_))
+                    rs_ = rs_[3600:]
+                if mode == 'dnpeak':
+                    # print('here2', len(rs_))
+                    rs_ = rs_[720:]
+            # print(method, len(rs_))
+            rs += rs_
+rsm = []
+# rs = rs[:19310]
+step = int(len(rs)//1000)
+# step = 30
+for j in range(step, len(rs), step):
+    rsm.append(sum(rs[j-step:j])/step)
+baseline_rsm = np.array(rsm)
+
+
 # methods = ['nearest', 'rr', 'longest_first', 'eta', 'sfm2', 'rllift2']
-methods = ['dqn', 'egc', 'rllift2']
+# methods = ['dqn', 'egc', 'rllift2']
 # methods = ['dqn', 'egc', 'eta', 'sfm2', 'rllift2']
+# methods = ['nearest', 'rr', 'longest_first', 'dqn', 'egc', 'eta', 'sfm2', 'rllift2']
+# methods = ['nearest', 'rr', 'longest_first', 'dqn', 'egc', 'sfm2', 'rllift2']
+methods = ['dqn', 'egc', 'sfm', 'rllift']
+legends = ['Robert', 'DRL-EGC', 'SFM', 'HCRL-EGC']
 # methods = ['dqn', 'rllift2', 'egc', 'eta']
-for mode in ['lunchpeak', 'uppeak', 'dnpeak', 'notpeak']:
-# for mode in ['uppeak', 'dnpeak']:
+# for mode in ['lunchpeak', 'uppeak', 'dnpeak', 'notpeak']:
+for mode in ['lunchpeak']:
     plt.figure()
-    plt.title(mode)
+    # plt.title(mode)
     print(mode)
     for i, method in enumerate(methods):
 
@@ -226,28 +256,38 @@ for mode in ['lunchpeak', 'uppeak', 'dnpeak', 'notpeak']:
                     # print(method, mode, len(rs_))
                     if method == 'dqn' or method == 'egc':
                         if mode == 'uppeak':
-                            print('here',len(rs_))
+                            # print('here',len(rs_))
                             rs_ = rs_[3600:]
                         if mode == 'dnpeak':
-                            print('here2', len(rs_))
+                            # print('here2', len(rs_))
                             rs_ = rs_[720:]
-                    print(method, len(rs_))
+                    # print(method, len(rs_))
                     rs += rs_
-        print(method, len(rs))
+        # print(method, len(rs))
         # rsm= [np.sum(rs[0:i + 1]) for i in range(len(rs))]
         # rsm= [np.mean(rs[max(i - (mean_interval - 1), 0):i + 1]) for i in range(len(rs))]
         rsm = []
         # rs = rs[:19310]
-        # step = int(len(rs)//1000)
+        step = int(len(rs)//1000)
         # step = 30
-        # for j in range(step, len(rs), step):
-        #     rsm.append(sum(rs[j-step:j])/step)
+        for j in range(step, len(rs), step):
+            rsm.append(sum(rs[j-step:j])/step)
             # rsm.append(sum(rs[j-step:j])/step-0.05*(2-i))
-        plt.plot(rs, color=COLORS[i], alpha=0.9, label=method)
+        # plt.plot(rs, color=COLORS[i], alpha=0.9, label=method)
         # plt.plot(np.array(rsm), label=method, color=COLORS[i], alpha=0.9)
+        if method == 'rllift':
+            rsm = np.array(rsm) + 0.1
+        rsm = np.array(rsm)[:1000]
+        plt.plot(rsm-baseline_rsm[:1000]-1, label=legends[i], color=COLORS[i], alpha=0.9)
+        # print(method, sum(np.array(rsm)[:1000]-baseline_rsm[:1000]))
+        print(method, sum(np.array(rsm))-sum(baseline_rsm[:1000]))
         # plt.plot(np.exp(np.array(rsm)*10), label=method, color=COLORS[i])
+    plt.xlabel('Time step', fontsize=xylabel_size)
+    plt.ylabel('Reward', fontsize=xylabel_size)
+    plt.tick_params(labelsize=xystick_size)
 
-    plt.legend()
+    plt.legend(fontsize=legend_size)
+    plt.savefig(f'{figure_dir}/delta_reward.pdf')
     plt.show()
     plt.close()
     # 30*60*2=
